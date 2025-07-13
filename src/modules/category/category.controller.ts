@@ -9,7 +9,7 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiConsumes, ApiParam } from '@nestjs/swagger';
 
 import { Pagination } from 'src/common/decorators/pagination.decorator';
 import { ValidatedImageFile } from 'src/common/decorators/upload-file.decorator';
@@ -42,6 +42,12 @@ export class CategoryController {
   @Pagination()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.categoryService.findAll(paginationDto);
+  }
+
+  @Get(EApiEndpointNames.GETCategoryBySlug)
+  @ApiParam({ name: 'slug', type: 'string' })
+  findBySlug(@Param('slug') slug: string) {
+    return this.categoryService.findBySlug(slug);
   }
 
   @Patch(EApiEndpointNames.PATCHUpdateCategory)

@@ -97,6 +97,24 @@ export class CategoryService {
     };
   }
 
+  async findBySlug(slug: string) {
+    console.log(typeof slug);
+
+    const category = await this.categoryRepository.findOne({
+      where: { slug },
+      relations: {
+        children: true,
+      },
+    });
+    if (!category) {
+      throw new NotFoundException(ENotFoundMessages.CategoryNotFound);
+    }
+
+    return {
+      category,
+    };
+  }
+
   async findOneById(id: string) {
     const category = await this.categoryRepository.findOneBy({ id });
     if (!category)
@@ -126,9 +144,7 @@ export class CategoryService {
 
       if (Location) {
         if (category.imageKey) {
-          console.log('Hello World');
           const result = await this.s3Service.deleteFile(category.imageKey);
-          console.log(result);
         }
 
         category.imageKey = Key;
