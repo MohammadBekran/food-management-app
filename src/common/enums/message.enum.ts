@@ -1,6 +1,7 @@
 export enum EPublicMessages {
   CategoryCreatedSuccessfully = 'Category has been created successfully',
   CategoryUpdatedSuccessfully = 'Category has been updated successfully',
+  CategoryDeletedSuccessfully = 'Category has been deleted successfully',
 }
 
 export enum ENotBadRequestMessages {}

@@ -161,7 +161,14 @@ export class CategoryService {
     };
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    const category = await this.findOneById(id);
+
+    if (category.imageKey) await this.s3Service.deleteFile(category.imageKey);
+    await this.categoryRepository.delete({ id: category.id });
+
+    return {
+      message: EPublicMessages.CategoryDeletedSuccessfully,
+    };
   }
 }
