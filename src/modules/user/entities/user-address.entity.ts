@@ -37,6 +37,8 @@ export class UserAddressEntity extends BaseEntity {
   @UpdateDateColumn({ type: 'time with time zone' })
   updated_at: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.addresses)
+  @ManyToOne(() => UserEntity, (user) => user.addresses, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 }

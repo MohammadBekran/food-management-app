@@ -5,8 +5,6 @@ config();
 
 const { DB_NAME, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD } = process.env;
 
-console.log({ DB_NAME, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD });
-
 const dataSource = new DataSource({
   type: 'postgres',
   database: DB_NAME,
