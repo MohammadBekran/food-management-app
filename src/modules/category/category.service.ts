@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isUUID } from 'class-validator';
 import slugify from 'slugify';
 import { Repository } from 'typeorm';
 
@@ -13,17 +14,17 @@ import {
   ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
-import { toBoolean } from 'src/common/utils/helpers.util';
+import { isBoolean, toBoolean } from 'src/common/utils/helpers.util';
 
-import { S3Service } from '../s3/s3.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { CategoryEntity } from './entities/category.entity';
 import {
   paginationData,
   paginationGenerator,
 } from 'src/common/utils/pagination.util';
+import { S3Service } from '../s3/s3.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
@@ -43,21 +44,23 @@ export class CategoryService {
     if (category)
       throw new ConflictException(EConflictMessages.CategoryAlreadyExists);
 
-    const uploadedImageUrl = await this.s3Service.uploadFile(
+    const { Key, Location } = await this.s3Service.uploadFile(
       image,
       EFileFolderNames.Categories,
     );
 
     let parent: CategoryEntity | null = null;
     if (show) toBoolean(show);
-    if (parentId) {
+    if (parentId && isUUID(parentId)) {
       parent = await this.categoryRepository.findOneBy({ id: parentId });
     }
 
     await this.categoryRepository.insert({
       title,
       slug: slug ?? slugify(title),
-      image: uploadedImageUrl,
+      show,
+      imageKey: Key,
+      imageUrl: Location,
       parentId: parent?.id,
     });
 
@@ -106,11 +109,59 @@ export class CategoryService {
     return await this.categoryRepository.findOneBy({ slug });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+    image: Express.Multer.File,
+  ) {
+    const { title, slug, show, parentId } = updateCategoryDto;
+
+    const category = await this.findOneById(id);
+
+    if (image) {
+      const { Key, Location } = await this.s3Service.uploadFile(
+        image,
+        EFileFolderNames.Categories,
+      );
+
+      if (Location) {
+        if (category.imageKey) {
+          console.log('Hello World');
+          const result = await this.s3Service.deleteFile(category.imageKey);
+          console.log(result);
+        }
+
+        category.imageKey = Key;
+        category.imageUrl = Location;
+      }
+    }
+    if (title) category.title = title;
+    if (show && isBoolean(show)) category.show = toBoolean(show);
+    if (slug) {
+      const formattedSlug = slugify(slug);
+
+      const existCategory = await this.findOneBySlug(formattedSlug);
+
+      if (existCategory && existCategory.id !== category.id) {
+        throw new ConflictException(EConflictMessages.CategoryAlreadyExists);
+      }
+
+      category.slug = formattedSlug;
+    }
+    if (parentId) {
+      const parentCategory = await this.findOneById(parentId);
+
+      category.parentId = parentCategory.id;
+    }
+
+    await this.categoryRepository.save(category);
+
+    return {
+      message: EPublicMessages.CategoryUpdatedSuccessfully,
+    };
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} category`;
   }
 }

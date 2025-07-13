@@ -33,7 +33,7 @@ export class S3Service {
       })
       .promise();
 
-    return result.Location;
+    return result;
   }
 
   async deleteFile(key: string) {

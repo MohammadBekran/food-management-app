@@ -45,15 +45,19 @@ export class CategoryController {
   }
 
   @Patch(EApiEndpointNames.PATCHUpdateCategory)
+  @ApiConsumes(ESwaggerConsumes.FormData)
+  @UseInterceptors(UploadFileS3('image'))
   update(
     @Param('id') id: string,
+    @ValidatedImageFile()
+    file: Express.Multer.File,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.update(id, updateCategoryDto, file);
   }
 
   @Delete(EApiEndpointNames.DELETECategory)
   remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+    return this.categoryService.remove(id);
   }
 }

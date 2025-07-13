@@ -7,5 +7,5 @@ export function toBoolean(value: string | boolean) {
     ? true
     : [false, 'false'].includes(value)
       ? false
-      : value;
+      : false;
 }

@@ -17,7 +17,7 @@
     "migration:run": "npm run typeorm -- migration:run -d ./src/configs/data-source.config.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d ./src/configs/data-source.config.ts",
     "migration:create": "npm run typeorm -- migration:create ./src/migrations/$npm_config_name.ts",
-    "migration:generate": "npm run typeorm -- migration:generate ./src/migrations/$npm_config_name.ts -d ./src/configs/data-source.config.ts",
+    "migration:generate": "npm run typeorm -- migration:generate ./src/migrations/ChangeCategoryEntity -d ./src/configs/data-source.config.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

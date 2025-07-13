@@ -19,7 +19,13 @@ export class CategoryEntity extends BaseEntity {
   slug: string;
 
   @Column()
-  image: string;
+  show: boolean;
+
+  @Column()
+  imageKey: string;
+
+  @Column()
+  imageUrl: string;
 
   @Column({ nullable: true })
   parentId: string;
