@@ -3,20 +3,22 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { EEntityNames } from 'src/common/enums/entity-name.enum';
 
+import { OtpEntity } from './otp.entity';
 import { UserAddressEntity } from './user-address.entity';
 
 @Entity(EEntityNames.User)
 export class UserEntity extends BaseEntity {
-  @Column()
+  @Column({ nullable: true })
   first_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   last_name: string;
 
   @Column({ nullable: true, unique: true })
@@ -25,20 +27,29 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true, unique: true })
   email: string;
 
-  @Column({ unique: true })
+  @Column({ nullable: true, unique: true })
   invite_code: string;
 
-  @Column({ unique: true })
+  @Column({ nullable: true, unique: true })
   score: string;
 
-  @Column({ unique: true })
+  @Column({ nullable: true, unique: true })
+  otpId: string;
+
+  @Column({ nullable: true, unique: true })
   agentId: string;
+
+  @Column({ nullable: true, default: false })
+  is_mobile_verified: boolean;
 
   @CreateDateColumn({ type: 'time with time zone' })
   created_at: Date;
 
   @UpdateDateColumn({ type: 'time with time zone' })
   updated_at: Date;
+
+  @OneToOne(() => OtpEntity, (otp) => otp.user)
+  otp: OtpEntity;
 
   @OneToMany(() => UserAddressEntity, (userAddress) => userAddress.user)
   addresses: UserAddressEntity[];

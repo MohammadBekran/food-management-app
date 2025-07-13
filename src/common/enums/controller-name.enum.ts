@@ -1,3 +1,4 @@
-export enum EControllerName {
+export enum EControllerNames {
+  Auth = 'auth',
   Category = 'category',
 }
