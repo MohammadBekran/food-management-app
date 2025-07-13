@@ -6,11 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiConsumes } from '@nestjs/swagger';
 
+import { Pagination } from 'src/common/decorators/pagination.decorator';
 import { ValidatedImageFile } from 'src/common/decorators/upload-file.decorator';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EControllerName } from 'src/common/enums/controller-name.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
@@ -35,12 +38,13 @@ export class CategoryController {
     return this.categoryService.create(createCategoryDto, file);
   }
 
-  @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  @Get(EApiEndpointNames.GETCategories)
+  @Pagination()
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.categoryService.findAll(paginationDto);
   }
 
-  @Patch(':id')
+  @Patch(EApiEndpointNames.PATCHUpdateCategory)
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -48,7 +52,7 @@ export class CategoryController {
     return this.categoryService.update(+id, updateCategoryDto);
   }
 
-  @Delete(':id')
+  @Delete(EApiEndpointNames.DELETECategory)
   remove(@Param('id') id: string) {
     return this.categoryService.remove(+id);
   }

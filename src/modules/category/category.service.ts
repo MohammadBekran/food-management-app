@@ -18,7 +18,12 @@ import { toBoolean } from 'src/common/utils/helpers.util';
 import { S3Service } from '../s3/s3.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CategoryEntity } from './entities/category.entity';
+import {
+  paginationData,
+  paginationGenerator,
+} from 'src/common/utils/pagination.util';
 
 @Injectable()
 export class CategoryService {
@@ -61,8 +66,32 @@ export class CategoryService {
     };
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll(paginationDto: PaginationDto) {
+    const { page, limit, skip } = paginationData(
+      paginationDto.page,
+      paginationDto.limit,
+    );
+
+    const [categories, count] = await this.categoryRepository.findAndCount({
+      where: {},
+      relations: {
+        parent: true,
+      },
+      select: {
+        parent: {
+          id: true,
+          title: true,
+        },
+      },
+      skip,
+      take: limit,
+      order: { created_at: 'DESC' },
+    });
+
+    return {
+      pagination: paginationGenerator(count, page, limit),
+      categories,
+    };
   }
 
   async findOneById(id: string) {
