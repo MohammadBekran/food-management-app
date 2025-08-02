@@ -9,10 +9,10 @@ import {
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
 
-import { UserEntity } from './user.entity';
+import { SupplierEntity } from './supplier.entity';
 
-@Entity(EEntityNames.UserOtp)
-export class OtpEntity extends BaseEntity {
+@Entity(EEntityNames.SupplierOtp)
+export class SupplierOtpEntity extends BaseEntity {
   @Column()
   code: string;
 
@@ -20,12 +20,14 @@ export class OtpEntity extends BaseEntity {
   expires_in: Date;
 
   @Column()
-  userId: string;
+  supplierId: string;
 
   @CreateDateColumn({ type: 'time with time zone' })
   created_at: Date;
 
-  @OneToOne(() => UserEntity, (user) => user.otp, { onDelete: 'CASCADE' })
+  @OneToOne(() => SupplierEntity, (supplier) => supplier.otp, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
-  user: UserEntity;
+  supplier: SupplierEntity;
 }

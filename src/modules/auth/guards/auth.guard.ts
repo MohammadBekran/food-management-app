@@ -8,7 +8,7 @@ import { isJWT } from 'class-validator';
 import type { Request } from 'express';
 
 import { SKIP_AUTH } from 'src/common/decorators/skip-auth.decorator';
-import { ENotAuthMessages } from 'src/common/enums/message.enum';
+import { EAuthMessages } from 'src/common/enums/message.enum';
 
 import { AuthService } from '../auth.service';
 
@@ -37,12 +37,12 @@ export class AuthGuard implements CanActivate {
   protected extractTokenFromRequest(request: Request) {
     const { authorization } = request.headers;
     if (!authorization || authorization.trim() === '') {
-      throw new UnauthorizedException(ENotAuthMessages.LoginToAccount);
+      throw new UnauthorizedException(EAuthMessages.LoginToAccount);
     }
 
     const [bearer, token] = authorization.split(' ');
     if (bearer?.toLowerCase() !== 'bearer' || !token || !isJWT(token)) {
-      throw new UnauthorizedException(ENotAuthMessages.LoginToAccount);
+      throw new UnauthorizedException(EAuthMessages.LoginToAccount);
     }
 
     return token;

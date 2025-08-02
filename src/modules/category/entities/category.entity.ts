@@ -7,8 +7,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { EEntityNames } from 'src/common/enums/entity-name.enum';
+import { SupplierEntity } from 'src/modules/supplier/entities/supplier.entity';
 
 @Entity(EEntityNames.Category)
 export class CategoryEntity extends BaseEntity {
@@ -43,4 +44,7 @@ export class CategoryEntity extends BaseEntity {
 
   @OneToMany(() => CategoryEntity, (category) => category.parent)
   children: CategoryEntity[];
+
+  @OneToMany(() => SupplierEntity, (supplier) => supplier.category)
+  suppliers: SupplierEntity[];
 }

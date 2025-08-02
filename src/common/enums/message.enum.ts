@@ -12,13 +12,15 @@ export enum ENotBadRequestMessages {
 
 export enum EConflictMessages {
   CategoryAlreadyExists = 'Category already exists',
+  SupplierAlreadyExists = 'Supplier already exists',
 }
 
 export enum ENotFoundMessages {
   CategoryNotFound = 'Category not found',
+  AgentNotFound = 'Agent not found',
 }
 
-export enum ENotAuthMessages {
+export enum EAuthMessages {
   AccountNotFound = 'Account not found',
   InvalidCode = 'Code is invalid',
   CodeExpired = 'Code has been expired',

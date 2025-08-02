@@ -5,19 +5,19 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { randomInt } from 'crypto';
 import { Repository } from 'typeorm';
 
+import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
 import {
-  ENotAuthMessages,
+  EAuthMessages,
   ENotBadRequestMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
+import type { TTokenPayload } from 'src/common/types/payload.type';
+import { generateOtpData, generateTokens } from 'src/common/utils/auth.util';
 
 import { OtpEntity } from '../user/entities/otp.entity';
 import { UserEntity } from '../user/entities/user.entity';
-import { CheckOtpDto, SendOtpDto } from './dto/otp.dto';
-import type { TTokenPayload } from './types/payload.type';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +31,7 @@ export class AuthService {
 
   async sendOtp(otpDto: SendOtpDto) {
     const { phone } = otpDto;
+
     let user = await this.userRepository.findOneBy({ phone });
 
     if (!user) {
@@ -58,16 +59,16 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new UnauthorizedException(ENotAuthMessages.AccountNotFound);
+      throw new UnauthorizedException(EAuthMessages.AccountNotFound);
     }
 
     const otp = user?.otp;
 
     if (otp?.code !== code) {
-      throw new UnauthorizedException(ENotAuthMessages.InvalidCode);
+      throw new UnauthorizedException(EAuthMessages.InvalidCode);
     }
     if (otp?.expires_in < new Date()) {
-      throw new UnauthorizedException(ENotAuthMessages.CodeExpired);
+      throw new UnauthorizedException(EAuthMessages.CodeExpired);
     }
     if (!user?.is_mobile_verified) {
       await this.userRepository.update(
@@ -78,9 +79,13 @@ export class AuthService {
       );
     }
 
-    const { accessToken, refreshToken } = this.generateTokens({
-      userId: user.id,
-    });
+    const { accessToken, refreshToken } = generateTokens(
+      {
+        id: user.id,
+      },
+      process.env.JWT_USER_ACCESS_TOKEN_SECRET,
+      process.env.JWT_USER_REFRESH_TOKEN_SECRET,
+    );
 
     return {
       message: EPublicMessages.LoggedInSuccessfully,
@@ -92,10 +97,7 @@ export class AuthService {
   async sendOtpToUser(user: UserEntity) {
     let otp = await this.otpRepository.findOneBy({ userId: user.id });
 
-    const { code, expires_in } = {
-      code: randomInt(100000, 1000000).toString(),
-      expires_in: new Date(new Date().getTime() + 1000 * 60 * 2),
-    };
+    const { code, expires_in } = generateOtpData();
 
     if (otp) {
       if (otp.expires_in > new Date()) {
@@ -120,38 +122,22 @@ export class AuthService {
   async validateAccessToken(token: string) {
     try {
       const payload = this.jwtService.verify<TTokenPayload>(token, {
-        secret: process.env.ACCESS_TOKEN_SECRET,
+        secret: process.env.JWT_USER_ACCESS_TOKEN_SECRET,
       });
-      const userId = payload?.userId;
+      const userId = payload?.id;
 
       if (typeof payload === 'object' && userId) {
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) {
-          throw new UnauthorizedException(ENotAuthMessages.AccountNotFound);
+          throw new UnauthorizedException(EAuthMessages.AccountNotFound);
         }
 
         return user;
       }
 
-      throw new UnauthorizedException(ENotAuthMessages.LoginToAccount);
+      throw new UnauthorizedException(EAuthMessages.LoginToAccount);
     } catch (error) {
-      throw new UnauthorizedException(ENotAuthMessages.LoginToAccount);
+      throw new UnauthorizedException(EAuthMessages.LoginToAccount);
     }
-  }
-
-  generateTokens(payload: TTokenPayload) {
-    const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.ACCESS_TOKEN_SECRET,
-      expiresIn: '7d',
-    });
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
-      expiresIn: '1y',
-    });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
 }

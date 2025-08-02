@@ -13,7 +13,9 @@ namespace NodeJS {
     S3_BUCKET_NAME: string;
     S3_ENDPOINT: string;
 
-    ACCESS_TOKEN_SECRET: string;
-    REFRESH_TOKEN_SECRET: string;
+    JWT_USER_ACCESS_TOKEN_SECRET: string;
+    JWT_USER_REFRESH_TOKEN_SECRET: string;
+    JWT_SUPPLIER_ACCESS_TOKEN_SECRET: string;
+    JWT_SUPPLIER_REFRESH_TOKEN_SECRET: string;
   }
 }

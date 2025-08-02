@@ -1,0 +1,76 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { BaseEntity } from 'src/common/entities/base.entity';
+import { EEntityNames } from 'src/common/enums/entity-name.enum';
+import { CategoryEntity } from 'src/modules/category/entities/category.entity';
+
+import { SupplierOtpEntity } from './otp.entity';
+
+@Entity(EEntityNames.Supplier)
+export class SupplierEntity extends BaseEntity {
+  @Column()
+  first_name: string;
+
+  @Column()
+  last_name: string;
+
+  @Column()
+  phone: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  national_code: string;
+
+  @Column({ nullable: true, default: false })
+  is_mobile_verified: boolean;
+
+  @Column()
+  city: string;
+
+  @Column()
+  store_name: string;
+
+  @Column()
+  invite_code: string;
+
+  @Column({ nullable: true })
+  otpId: string;
+
+  @Column({ nullable: true })
+  categoryId: string;
+
+  @Column({ nullable: true })
+  agentId: string;
+
+  @CreateDateColumn({ type: 'time with time zone' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'time with time zone' })
+  updated_at: Date;
+
+  @OneToOne(() => SupplierOtpEntity, (otp) => otp.supplier)
+  @JoinColumn()
+  otp: SupplierOtpEntity;
+
+  @ManyToOne(() => CategoryEntity, (category) => category.suppliers, {
+    onDelete: 'SET NULL',
+  })
+  category: CategoryEntity;
+
+  @ManyToOne(() => SupplierEntity, (user) => user.subsets)
+  user: SupplierEntity;
+
+  @OneToMany(() => SupplierEntity, (user) => user.user)
+  subsets: SupplierEntity[];
+}
