@@ -14,6 +14,7 @@ import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 
 import { SupplierOtpEntity } from './otp.entity';
+import { ESupplierStatus } from '../enums/status.enum';
 
 @Entity(EEntityNames.Supplier)
 export class SupplierEntity extends BaseEntity {
@@ -31,6 +32,9 @@ export class SupplierEntity extends BaseEntity {
 
   @Column()
   national_code: string;
+
+  @Column({ nullable: true, default: ESupplierStatus.Registered })
+  status: string;
 
   @Column({ nullable: true, default: false })
   is_mobile_verified: boolean;

@@ -13,6 +13,8 @@ export enum ENotBadRequestMessages {
 export enum EConflictMessages {
   CategoryAlreadyExists = 'Category already exists',
   SupplierAlreadyExists = 'Supplier already exists',
+  NationalCodeAlreadyUsed = 'National code already used by antoher person',
+  EmailAlreadyUsed = 'Email already used by another person',
 }
 
 export enum ENotFoundMessages {

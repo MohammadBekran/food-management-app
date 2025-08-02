@@ -1,6 +1,9 @@
 export enum EApiEndpointNames {
-  POSTSendOtp = 'send-otp',
-  POSTCheckOtp = 'check-otp',
+  POSTUserSendOtp = 'send-otp',
+  POSTUserCheckOtp = 'check-otp',
+  POSTSupplierSignup = 'signup',
+  POSTSupplierCheckOtp = 'check-otp',
+  POSTSupplierSupplementaryInformation = 'supplementary-information',
   POSTCreateCategory = '',
   GETCategories = '',
   GETCategoryBySlug = 'by-slug/:slug',

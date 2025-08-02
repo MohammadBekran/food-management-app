@@ -32,6 +32,7 @@ import {
 import { SupplierEntity } from './entities/supplier.entity';
 import { CategoryService } from '../category/category.service';
 import { SupplierOtpEntity } from './entities/otp.entity';
+import { ESupplierStatus } from './enums/status.enum';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -139,6 +140,41 @@ export class SupplierService {
       message: EPublicMessages.LoggedInSuccessfully,
       accessToken,
       refreshToken,
+    };
+  }
+
+  async saveSupplementaryInformation(
+    supplementaryInformationDto: SupplementaryInformationDto,
+  ) {
+    const { id: userId } = this.request.user!;
+
+    const { email, national_code } = supplementaryInformationDto;
+
+    let supplier = await this.supplierRepository.findOneBy({
+      national_code,
+    });
+    if (supplier && supplier?.id !== userId) {
+      throw new ConflictException(EConflictMessages.NationalCodeAlreadyUsed);
+    }
+
+    supplier = await this.supplierRepository.findOneBy({
+      email,
+    });
+    if (supplier && supplier?.id !== userId) {
+      throw new ConflictException(EConflictMessages.EmailAlreadyUsed);
+    }
+
+    await this.supplierRepository.update(
+      { id: userId },
+      {
+        national_code,
+        email,
+        status: ESupplierStatus.SupplementaryInformation,
+      },
+    );
+
+    return {
+      message: '',
     };
   }
 
