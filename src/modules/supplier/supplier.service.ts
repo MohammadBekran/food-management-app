@@ -3,6 +3,7 @@ import { REQUEST } from '@nestjs/core';
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -33,6 +34,10 @@ import { SupplierEntity } from './entities/supplier.entity';
 import { CategoryService } from '../category/category.service';
 import { SupplierOtpEntity } from './entities/otp.entity';
 import { ESupplierStatus } from './enums/status.enum';
+import type { TUploadedDocument } from './types/uploaded-document.type';
+import { S3Service } from '../s3/s3.service';
+import { SupplierImageEntity } from './entities/supplier-image.entity';
+import { SupplierDocumentEntity } from './entities/supplier-document.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -41,16 +46,28 @@ export class SupplierService {
     private supplierRepository: Repository<SupplierEntity>,
     @InjectRepository(SupplierOtpEntity)
     private supplierOtpRepository: Repository<SupplierOtpEntity>,
+    @InjectRepository(SupplierImageEntity)
+    private supplierImageRepository: Repository<SupplierImageEntity>,
+    @InjectRepository(SupplierDocumentEntity)
+    private supplierDocumentRepository: Repository<SupplierDocumentEntity>,
 
     @Inject(REQUEST) private request: Request,
 
     private categoryService: CategoryService,
     private jwtService: JwtService,
+    private s3Service: S3Service,
   ) {}
 
   async signup(signupDto: SupplierSignupDto) {
-    const { first_name, last_name, phone, city, invite_code, categoryId } =
-      signupDto;
+    const {
+      first_name,
+      last_name,
+      phone,
+      city,
+      store_name,
+      invite_code,
+      categoryId,
+    } = signupDto;
 
     const supplier = await this.supplierRepository.findOneBy({ phone });
     if (supplier) {
@@ -71,6 +88,7 @@ export class SupplierService {
       last_name,
       phone,
       city,
+      store_name,
       invite_code: randomInt(100000, 1000000).toString(),
       categoryId: category.id,
       agentId: agent?.id,
@@ -87,14 +105,9 @@ export class SupplierService {
   async sendOtp(otpDto: SendOtpDto) {
     const { phone } = otpDto;
 
-    let supplier = await this.supplierRepository.findOneBy({ phone });
-    if (!supplier) {
-      supplier = await this.supplierRepository.create({
-        phone,
-      });
-
-      supplier = await this.supplierRepository.save(supplier);
-    }
+    const supplier = await this.supplierRepository.findOneBy({ phone });
+    if (!supplier)
+      throw new UnauthorizedException(EAuthMessages.AccountNotFound);
 
     await this.sendOtpToSupplier(supplier);
 
@@ -106,7 +119,12 @@ export class SupplierService {
   async checkOtp(otpDto: CheckOtpDto) {
     const { phone, code } = otpDto;
 
-    const supplier = await this.supplierRepository.findOneBy({ phone });
+    console.log(phone);
+    const supplier = await this.supplierRepository.findOne({
+      where: { phone },
+      relations: ['otp'],
+    });
+    console.log(supplier);
     if (!supplier) {
       throw new UnauthorizedException(EAuthMessages.AccountNotFound);
     }
@@ -134,6 +152,7 @@ export class SupplierService {
       { id: supplier.id },
       process.env.JWT_SUPPLIER_ACCESS_TOKEN_SECRET,
       process.env.JWT_SUPPLIER_REFRESH_TOKEN_SECRET,
+      this.jwtService,
     );
 
     return {
@@ -174,7 +193,50 @@ export class SupplierService {
     );
 
     return {
-      message: '',
+      message: EPublicMessages.SupplementaryInformationSavedSuccessfully,
+    };
+  }
+
+  async uploadDocuments(files: TUploadedDocument) {
+    const { id: userId } = this.request.user!;
+    const { acceptedDocument, image } = files;
+
+    const uploadedAcceptedDocument = await this.s3Service.uploadFile(
+      acceptedDocument[0],
+      'accepted-documents',
+    );
+    const uploadedImage = await this.s3Service.uploadFile(image[0], 'images');
+
+    let supplierImage: SupplierImageEntity | null = null;
+    let supplierDocument: SupplierDocumentEntity | null = null;
+
+    if (uploadedImage) {
+      supplierImage = this.supplierImageRepository.create({
+        supplierId: userId,
+        image: uploadedImage.Location,
+      });
+
+      supplierImage = await this.supplierImageRepository.save(supplierImage);
+    }
+    if (uploadedAcceptedDocument) {
+      supplierDocument = this.supplierDocumentRepository.create({
+        supplierId: userId,
+        document: uploadedAcceptedDocument.Location,
+      });
+
+      supplierDocument =
+        await this.supplierDocumentRepository.save(supplierDocument);
+    }
+
+    if (supplierImage?.image && supplierDocument?.document) {
+      await this.supplierRepository.update(
+        { id: userId },
+        { status: ESupplierStatus.UploadDocument },
+      );
+    }
+
+    return {
+      message: EPublicMessages.DocumentUploadedSuccessfully,
     };
   }
 
@@ -210,9 +272,9 @@ export class SupplierService {
       const payload = this.jwtService.verify<TTokenPayload>(token, {
         secret: process.env.JWT_SUPPLIER_ACCESS_TOKEN_SECRET,
       });
-      const supplierId = payload.id;
+      const supplierId = payload?.id;
 
-      if (typeof payload === 'object' || supplierId) {
+      if (typeof payload === 'object' && supplierId) {
         const supplier = await this.supplierRepository.findOneBy({
           id: supplierId,
         });

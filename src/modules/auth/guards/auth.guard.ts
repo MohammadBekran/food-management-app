@@ -1,4 +1,5 @@
 import {
+  Injectable,
   UnauthorizedException,
   type CanActivate,
   type ExecutionContext,
@@ -12,6 +13,7 @@ import { EAuthMessages } from 'src/common/enums/message.enum';
 
 import { AuthService } from '../auth.service';
 
+@Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,

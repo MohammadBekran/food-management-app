@@ -85,6 +85,7 @@ export class AuthService {
       },
       process.env.JWT_USER_ACCESS_TOKEN_SECRET,
       process.env.JWT_USER_REFRESH_TOKEN_SECRET,
+      this.jwtService,
     );
 
     return {

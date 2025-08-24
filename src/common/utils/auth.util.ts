@@ -1,4 +1,5 @@
 import { randomInt } from 'crypto';
+import { JwtService } from '@nestjs/jwt';
 
 import type { TTokenPayload } from '../types/payload.type';
 
@@ -6,12 +7,13 @@ export function generateTokens(
   payload: TTokenPayload,
   accessTokenSecret: string,
   refreshTokenSecret: string,
+  jwtService: JwtService,
 ) {
-  const accessToken = this.jwtService.sign(payload, {
+  const accessToken = jwtService.sign(payload, {
     secret: accessTokenSecret,
     expiresIn: '7d',
   });
-  const refreshToken = this.jwtService.sign(payload, {
+  const refreshToken = jwtService.sign(payload, {
     secret: refreshTokenSecret,
     expiresIn: '1y',
   });

@@ -4,6 +4,8 @@ export enum EPublicMessages {
   CategoryDeletedSuccessfully = 'Category has been deleted successfully',
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
+  SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
+  DocumentUploadedSuccessfully = 'Document has been uploaded successfully',
 }
 
 export enum ENotBadRequestMessages {
@@ -13,7 +15,7 @@ export enum ENotBadRequestMessages {
 export enum EConflictMessages {
   CategoryAlreadyExists = 'Category already exists',
   SupplierAlreadyExists = 'Supplier already exists',
-  NationalCodeAlreadyUsed = 'National code already used by antoher person',
+  NationalCodeAlreadyUsed = 'National code already used by another person',
   EmailAlreadyUsed = 'Email already used by another person',
 }
 

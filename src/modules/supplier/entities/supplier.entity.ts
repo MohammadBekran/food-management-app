@@ -13,8 +13,10 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 
-import { SupplierOtpEntity } from './otp.entity';
 import { ESupplierStatus } from '../enums/status.enum';
+import { SupplierOtpEntity } from './otp.entity';
+import { SupplierImageEntity } from './supplier-image.entity';
+import { SupplierDocumentEntity } from './supplier-document.entity';
 
 @Entity(EEntityNames.Supplier)
 export class SupplierEntity extends BaseEntity {
@@ -27,10 +29,10 @@ export class SupplierEntity extends BaseEntity {
   @Column()
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   national_code: string;
 
   @Column({ nullable: true, default: ESupplierStatus.Registered })
@@ -77,4 +79,10 @@ export class SupplierEntity extends BaseEntity {
 
   @OneToMany(() => SupplierEntity, (user) => user.user)
   subsets: SupplierEntity[];
+
+  @OneToMany(() => SupplierImageEntity, (image) => image.supplier)
+  images: SupplierImageEntity[];
+
+  @OneToMany(() => SupplierDocumentEntity, (document) => document.supplier)
+  documents: SupplierDocumentEntity[];
 }

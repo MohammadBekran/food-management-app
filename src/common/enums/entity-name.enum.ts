@@ -1,8 +1,10 @@
 export enum EEntityNames {
   User = 'user',
   UserAddress = 'user_address',
-  UserOtp = 'use_otp',
+  UserOtp = 'user_otp',
   Supplier = 'supplier',
   SupplierOtp = 'supplier_otp',
+  SupplierImage = 'supplier_image',
+  SupplierDocument = 'supplier_document',
   Category = 'category',
 }

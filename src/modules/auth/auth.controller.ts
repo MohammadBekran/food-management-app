@@ -15,13 +15,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post(EApiEndpointNames.POSTUserSendOtp)
-  @ApiConsumes(ESwaggerConsumes.JSON, ESwaggerConsumes.URLEncoded)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   sendOtp(@Body() otpDto: SendOtpDto) {
     return this.authService.sendOtp(otpDto);
   }
 
   @Post(EApiEndpointNames.POSTUserCheckOtp)
-  @ApiConsumes(ESwaggerConsumes.JSON, ESwaggerConsumes.URLEncoded)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   checkOtp(@Body() otpDto: CheckOtpDto) {
     return this.authService.checkOtp(otpDto);
   }

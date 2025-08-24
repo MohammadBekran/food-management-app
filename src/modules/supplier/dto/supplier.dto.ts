@@ -1,26 +1,38 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsIdentityCard } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsIdentityCard,
+  IsPhoneNumber,
+  IsUUID,
+  Length,
+} from 'class-validator';
 
 export class SupplierSignupDto {
   @ApiProperty()
+  @Length(3, 20)
   first_name: string;
 
   @ApiProperty()
+  @Length(3, 20)
   last_name: string;
 
   @ApiProperty()
+  @IsPhoneNumber('IR')
   phone: string;
 
   @ApiProperty()
+  @Length(2, 20)
   city: string;
 
   @ApiProperty()
+  @Length(3, 20)
   store_name: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   invite_code: string;
 
   @ApiProperty()
+  @IsUUID()
   categoryId: string;
 }
 
@@ -30,6 +42,14 @@ export class SupplementaryInformationDto {
   email: string;
 
   @ApiProperty()
-  @IsIdentityCard()
+  @IsIdentityCard('IR')
   national_code: string;
+}
+
+export class UploadDocumentsDto {
+  @ApiProperty({ format: 'binary' })
+  acceptedDocument: string;
+
+  @ApiProperty({ format: 'binary' })
+  image: string;
 }

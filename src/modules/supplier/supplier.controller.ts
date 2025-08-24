@@ -1,18 +1,28 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Put,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { SupplierAuth } from 'src/common/decorators/auth.decorator';
-import { CheckOtpDto } from 'src/common/dto/otp.dto';
+import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
 import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
+import { UploadFileFieldsS3 } from 'src/common/interceptors/upload-file.interceptor';
 
 import {
   SupplementaryInformationDto,
   SupplierSignupDto,
+  UploadDocumentsDto,
 } from './dto/supplier.dto';
 import { SupplierService } from './supplier.service';
+import type { TUploadedDocument } from './types/uploaded-document.type';
 
 @Controller(EControllerNames.Supplier)
 @ApiTags(EApiTagNames.Supplier)
@@ -25,6 +35,12 @@ export class SupplierController {
     return this.supplierService.signup(signupDto);
   }
 
+  @Post(EApiEndpointNames.POSTSupplierSendOtp)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
+  sendOtp(@Body() sendOtpDto: SendOtpDto) {
+    return this.supplierService.sendOtp(sendOtpDto);
+  }
+
   @Post(EApiEndpointNames.POSTSupplierCheckOtp)
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   checkOtp(@Body() checkOtpDto: CheckOtpDto) {
@@ -34,11 +50,27 @@ export class SupplierController {
   @Post(EApiEndpointNames.POSTSupplierSupplementaryInformation)
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   @SupplierAuth()
-  supplementaryInformationDto(
+  saveSupplementaryInformation(
     @Body() supplementaryInformationDto: SupplementaryInformationDto,
   ) {
     return this.supplierService.saveSupplementaryInformation(
       supplementaryInformationDto,
     );
+  }
+
+  @Put(EApiEndpointNames.PUTUploadDocuments)
+  @ApiConsumes(ESwaggerConsumes.FormData)
+  @SupplierAuth()
+  @UseInterceptors(
+    UploadFileFieldsS3([
+      { name: 'acceptedDocument', maxCount: 10 },
+      { name: 'image', maxCount: 10 },
+    ]),
+  )
+  uploadDocuments(
+    @Body() uploadDocumentsDto: UploadDocumentsDto,
+    @UploadedFiles() files: TUploadedDocument,
+  ) {
+    return this.supplierService.uploadDocuments(files);
   }
 }
