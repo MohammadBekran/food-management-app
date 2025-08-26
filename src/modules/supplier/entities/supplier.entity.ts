@@ -12,6 +12,8 @@ import {
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
+import { MenuGroupEntity } from 'src/modules/menu/entities/menu-group.entity';
+import { MenuEntity } from 'src/modules/menu/entities/menu.entity';
 
 import { ESupplierStatus } from '../enums/status.enum';
 import { SupplierOtpEntity } from './otp.entity';
@@ -86,6 +88,12 @@ export class SupplierEntity extends BaseEntity {
 
   @OneToMany(() => SupplierDocumentEntity, (document) => document.supplier)
   documents: SupplierDocumentEntity[];
+
+  @OneToMany(() => MenuEntity, (menu) => menu.supplier)
+  menus: MenuEntity;
+
+  @OneToMany(() => MenuGroupEntity, (menuGroup) => menuGroup.supplier)
+  menuGroups: MenuGroupEntity;
 
   @OneToOne(() => SupplierContractEntity, (contract) => contract.supplier)
   contract: SupplierContractEntity;
