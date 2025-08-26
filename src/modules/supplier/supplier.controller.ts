@@ -14,11 +14,16 @@ import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
-import { UploadFileFieldsS3 } from 'src/common/interceptors/upload-file.interceptor';
+import {
+  UploadFileFieldsS3,
+  UploadFileS3,
+} from 'src/common/interceptors/upload-file.interceptor';
 
+import { ValidatedImageFile } from 'src/common/decorators/upload-file.decorator';
 import {
   SupplementaryInformationDto,
   SupplierSignupDto,
+  UploadContractDto,
   UploadDocumentsDto,
 } from './dto/supplier.dto';
 import { SupplierService } from './supplier.service';
@@ -58,7 +63,7 @@ export class SupplierController {
     );
   }
 
-  @Put(EApiEndpointNames.PUTUploadDocuments)
+  @Put(EApiEndpointNames.PUTSupplierUploadDocuments)
   @ApiConsumes(ESwaggerConsumes.FormData)
   @SupplierAuth()
   @UseInterceptors(
@@ -72,5 +77,16 @@ export class SupplierController {
     @UploadedFiles() files: TUploadedDocument,
   ) {
     return this.supplierService.uploadDocuments(files);
+  }
+
+  @Put(EApiEndpointNames.PUTSupplierUploadContract)
+  @ApiConsumes(ESwaggerConsumes.FormData)
+  @SupplierAuth()
+  @UseInterceptors(UploadFileS3('contract'))
+  uploadContract(
+    @Body() uploadContractDto: UploadContractDto,
+    @ValidatedImageFile() file: Express.Multer.File,
+  ) {
+    return this.supplierService.uploadContract(file);
   }
 }

@@ -1,6 +1,7 @@
 export enum ESupplierStatus {
   Registered = 'registered',
-  SupplementaryInformation = 'supplimantary-information',
+  SupplementaryInformation = 'supplementary-information',
   UploadDocument = 'upload-document',
-  Contract = 'contract',
+  UploadContract = 'upload-contract',
+  Accepted = 'accepted',
 }

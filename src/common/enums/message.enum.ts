@@ -6,6 +6,7 @@ export enum EPublicMessages {
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
   DocumentUploadedSuccessfully = 'Document has been uploaded successfully',
+  ContractUploadedSuccessfully = 'Contract has been uploaded successfully',
 }
 
 export enum ENotBadRequestMessages {
@@ -31,7 +32,10 @@ export enum EAuthMessages {
   LoginToAccount = 'Login to your account',
 }
 
-export enum EForbiddenMessages {}
+export enum EForbiddenMessages {
+  CompleteSupplementaryInformation = 'First try to complete your supplementary information',
+  UploadDocuments = 'To access this step, try to upload your documents',
+}
 
 export enum EValidationErrorMessages {
   InvalidPhoneNumber = 'Phone number is invalid',

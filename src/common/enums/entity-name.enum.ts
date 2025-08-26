@@ -6,5 +6,6 @@ export enum EEntityNames {
   SupplierOtp = 'supplier_otp',
   SupplierImage = 'supplier_image',
   SupplierDocument = 'supplier_document',
+  SupplierContract = 'supplier_contract',
   Category = 'category',
 }

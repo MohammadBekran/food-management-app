@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { CategoryModule } from '../category/category.module';
+import { S3Module } from '../s3/s3.module';
+import { SupplierOtpEntity } from './entities/otp.entity';
+import { SupplierContractEntity } from './entities/supplier-contract.entity';
+import { SupplierDocumentEntity } from './entities/supplier-document.entity';
+import { SupplierImageEntity } from './entities/supplier-image.entity';
+import { SupplierEntity } from './entities/supplier.entity';
 import { SupplierController } from './supplier.controller';
 import { SupplierService } from './supplier.service';
-import { SupplierEntity } from './entities/supplier.entity';
-import { SupplierOtpEntity } from './entities/otp.entity';
-import { CategoryModule } from '../category/category.module';
-import { SupplierImageEntity } from './entities/supplier-image.entity';
-import { SupplierDocumentEntity } from './entities/supplier-document.entity';
-import { S3Module } from '../s3/s3.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { S3Module } from '../s3/s3.module';
       SupplierOtpEntity,
       SupplierImageEntity,
       SupplierDocumentEntity,
+      SupplierContractEntity,
     ]),
     CategoryModule,
     JwtModule,

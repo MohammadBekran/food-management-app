@@ -21,6 +21,7 @@ import {
   ENotFoundMessages,
   EPublicMessages,
   ENotBadRequestMessages,
+  EForbiddenMessages,
 } from 'src/common/enums/message.enum';
 import type { TTokenPayload } from 'src/common/types/payload.type';
 import { generateOtpData, generateTokens } from 'src/common/utils/auth.util';
@@ -38,6 +39,7 @@ import type { TUploadedDocument } from './types/uploaded-document.type';
 import { S3Service } from '../s3/s3.service';
 import { SupplierImageEntity } from './entities/supplier-image.entity';
 import { SupplierDocumentEntity } from './entities/supplier-document.entity';
+import { SupplierContractEntity } from './entities/supplier-contract.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -50,6 +52,8 @@ export class SupplierService {
     private supplierImageRepository: Repository<SupplierImageEntity>,
     @InjectRepository(SupplierDocumentEntity)
     private supplierDocumentRepository: Repository<SupplierDocumentEntity>,
+    @InjectRepository(SupplierContractEntity)
+    private supplierContractRepository: Repository<SupplierContractEntity>,
 
     @Inject(REQUEST) private request: Request,
 
@@ -237,6 +241,48 @@ export class SupplierService {
 
     return {
       message: EPublicMessages.DocumentUploadedSuccessfully,
+    };
+  }
+
+  async uploadContract(file: Express.Multer.File) {
+    const { id: userId } = this.request.user!;
+    const supplier = await this.supplierRepository.findOneBy({ id: userId });
+
+    if (supplier?.status === ESupplierStatus.Registered) {
+      throw new ForbiddenException(
+        EForbiddenMessages.CompleteSupplementaryInformation,
+      );
+    } else if (supplier?.status === ESupplierStatus.SupplementaryInformation) {
+      throw new ForbiddenException(EForbiddenMessages.UploadDocuments);
+    }
+
+    console.log('contract', file);
+    const uploadedContractImage = await this.s3Service.uploadFile(
+      file,
+      'contracts',
+    );
+
+    let contractImage: SupplierContractEntity | null = null;
+    if (uploadedContractImage) {
+      contractImage = this.supplierContractRepository.create({
+        contract: uploadedContractImage.Location,
+        supplierId: userId,
+      });
+
+      await this.supplierContractRepository.save(contractImage);
+    }
+
+    if (contractImage?.contract) {
+      await this.supplierRepository.update(
+        { id: userId },
+        {
+          status: ESupplierStatus.UploadContract,
+        },
+      );
+    }
+
+    return {
+      message: EPublicMessages.ContractUploadedSuccessfully,
     };
   }
 

@@ -17,6 +17,7 @@ import { ESupplierStatus } from '../enums/status.enum';
 import { SupplierOtpEntity } from './otp.entity';
 import { SupplierImageEntity } from './supplier-image.entity';
 import { SupplierDocumentEntity } from './supplier-document.entity';
+import { SupplierContractEntity } from './supplier-contract.entity';
 
 @Entity(EEntityNames.Supplier)
 export class SupplierEntity extends BaseEntity {
@@ -85,4 +86,7 @@ export class SupplierEntity extends BaseEntity {
 
   @OneToMany(() => SupplierDocumentEntity, (document) => document.supplier)
   documents: SupplierDocumentEntity[];
+
+  @OneToOne(() => SupplierContractEntity, (contract) => contract.supplier)
+  contract: SupplierContractEntity;
 }
