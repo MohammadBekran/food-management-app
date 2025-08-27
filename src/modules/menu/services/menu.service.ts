@@ -7,26 +7,26 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import type { Request } from 'express';
+import { Repository } from 'typeorm';
 
-import { S3Service } from 'src/modules/s3/s3.service';
 import { EFileFolderNames } from 'src/common/enums/file-folder-name.enum';
 import {
   EInternalServerErrorException,
   ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
+import { S3Service } from 'src/modules/s3/s3.service';
 
-import { MenuEntity } from '../entities/menu.entity';
 import {
-  CreateMenuDto,
   ActionMenuDto,
+  CreateMenuDto,
   FindMenusParamDto,
   UpdateMenuDto,
 } from '../dto/menu.dto';
-import { MenuGroupService } from './menu-group.service';
 import { MenuGroupEntity } from '../entities/menu-group.entity';
+import { MenuEntity } from '../entities/menu.entity';
+import { MenuGroupService } from './menu-group.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class MenuService {
@@ -73,6 +73,51 @@ export class MenuService {
 
     return {
       message: EPublicMessages.MenuCreatedSuccessfully,
+    };
+  }
+
+  async update(
+    actionMenuDto: ActionMenuDto,
+    updateMenuDto: UpdateMenuDto,
+    image: Express.Multer.File,
+  ) {
+    const { id: supplierId } = this.req.user!;
+    const { id } = actionMenuDto;
+    const { name, price, discount, description, score, groupId } =
+      updateMenuDto;
+
+    let updateMenuData: MenuEntity | null = {} as MenuEntity;
+
+    if (image) {
+      const uploadedImage = await this.s3Service.uploadFile(
+        image,
+        EFileFolderNames.MenuImages,
+      );
+
+      if (uploadedImage) {
+        updateMenuData.image = uploadedImage.Location;
+        updateMenuData.imageKey = uploadedImage.Key;
+      }
+    }
+
+    if (groupId) {
+      const group = await this.menuGroupRepository.findOneBy({
+        id: groupId,
+        supplierId,
+      });
+
+      if (group) updateMenuData.menuGroupId = groupId;
+    }
+    if (name) updateMenuData.name = name;
+    if (price) updateMenuData.price = price;
+    if (discount) updateMenuData.discount = discount;
+    if (description) updateMenuData.description = description;
+    if (score) updateMenuData.score = score;
+
+    await this.menuRepository.update({ id }, updateMenuData);
+
+    return {
+      message: EPublicMessages.MenuUpdatedSuccessfully,
     };
   }
 

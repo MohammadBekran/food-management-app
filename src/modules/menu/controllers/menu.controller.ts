@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -22,6 +23,7 @@ import {
   CreateMenuDto,
   ActionMenuDto,
   FindMenusParamDto,
+  UpdateMenuDto,
 } from '../dto/menu.dto';
 import { MenuService } from '../services/menu.service';
 
@@ -39,6 +41,17 @@ export class MenuController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     return this.menuService.create(createMenuDto, image);
+  }
+
+  @Put(EApiEndpointNames.PUTUpdateMenu)
+  @ApiConsumes(ESwaggerConsumes.FormData)
+  @UseInterceptors(UploadFileS3('image'))
+  update(
+    @Param() actionMenuDto: ActionMenuDto,
+    @Body() updateMenuDto: UpdateMenuDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    return this.menuService.update(actionMenuDto, updateMenuDto, image);
   }
 
   @Get(EApiEndpointNames.GETMenusBySupplierId)
