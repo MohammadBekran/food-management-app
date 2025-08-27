@@ -2,6 +2,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   Scope,
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -13,6 +14,7 @@ import { S3Service } from 'src/modules/s3/s3.service';
 import { EFileFolderNames } from 'src/common/enums/file-folder-name.enum';
 import {
   EInternalServerErrorException,
+  ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
 
@@ -82,5 +84,14 @@ export class MenuService {
     return {
       menus,
     };
+  }
+
+  async checkExistenceById(id: string) {
+    const { id: supplierId } = this.req.user!;
+
+    const menu = await this.menuRepository.findOneBy({ id, supplierId });
+    if (!menu) throw new NotFoundException(ENotFoundMessages.MenuNotFound);
+
+    return menu;
   }
 }

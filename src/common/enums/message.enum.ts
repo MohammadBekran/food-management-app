@@ -27,6 +27,7 @@ export enum EConflictMessages {
 export enum ENotFoundMessages {
   CategoryNotFound = 'Category not found',
   AgentNotFound = 'Agent not found',
+  MenuNotFound = 'Menu not found',
   MenuGroupNotFound = 'Menu group not found',
 }
 
