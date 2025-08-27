@@ -12,4 +12,9 @@ export enum EApiEndpointNames {
   GETCategoryBySlug = 'by-slug/:slug',
   PATCHUpdateCategory = ':id',
   DELETECategory = ':id',
+  POSTCreateMenu = '',
+  GETMenuGroups = '',
+  GETMenuGroup = ':id',
+  PUTUpdateMenuGroup = ':id',
+  DELETEMenuGroup = ':id',
 }

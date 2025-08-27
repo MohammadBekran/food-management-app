@@ -8,4 +8,7 @@ export enum EEntityNames {
   SupplierDocument = 'supplier_document',
   SupplierContract = 'supplier_contract',
   Category = 'category',
+  Menu = 'menu',
+  MenuGroup = 'menu_group',
+  MenuFeedback = 'menu_feedback',
 }

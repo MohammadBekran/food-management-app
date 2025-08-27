@@ -2,11 +2,14 @@ export enum EPublicMessages {
   CategoryCreatedSuccessfully = 'Category has been created successfully',
   CategoryUpdatedSuccessfully = 'Category has been updated successfully',
   CategoryDeletedSuccessfully = 'Category has been deleted successfully',
+  MenuGroupCreatedSuccessfully = 'Menu group has been created successfully',
+  MenuGroupUpdatedSuccessfully = 'Menu group has been updated successfully',
+  MenuGroupDeletedSuccessfully = 'Menu group has been deleted successfully',
+  DocumentUploadedSuccessfully = 'Document has been uploaded successfully',
+  ContractUploadedSuccessfully = 'Contract has been uploaded successfully',
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
-  DocumentUploadedSuccessfully = 'Document has been uploaded successfully',
-  ContractUploadedSuccessfully = 'Contract has been uploaded successfully',
 }
 
 export enum ENotBadRequestMessages {
@@ -23,6 +26,7 @@ export enum EConflictMessages {
 export enum ENotFoundMessages {
   CategoryNotFound = 'Category not found',
   AgentNotFound = 'Agent not found',
+  MenuGroupNotFound = 'Menu group not found',
 }
 
 export enum EAuthMessages {

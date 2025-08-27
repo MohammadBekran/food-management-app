@@ -12,6 +12,7 @@ import { EEntityNames } from 'src/common/enums/entity-name.enum';
 
 import { OtpEntity } from './otp.entity';
 import { UserAddressEntity } from './user-address.entity';
+import { MenuFeedbackEntity } from 'src/modules/menu/entities/menu-feedback.entity';
 
 @Entity(EEntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -42,15 +43,18 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true, default: false })
   is_mobile_verified: boolean;
 
-  @CreateDateColumn({ type: 'time with time zone' })
-  created_at: Date;
-
-  @UpdateDateColumn({ type: 'time with time zone' })
-  updated_at: Date;
-
   @OneToOne(() => OtpEntity, (otp) => otp.user)
   otp: OtpEntity;
 
   @OneToMany(() => UserAddressEntity, (userAddress) => userAddress.user)
   addresses: UserAddressEntity[];
+
+  @OneToMany(() => MenuFeedbackEntity, (menuFeedback) => menuFeedback.user)
+  feedbacks: MenuFeedbackEntity[];
+
+  @CreateDateColumn({ type: 'time with time zone' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'time with time zone' })
+  updated_at: Date;
 }
