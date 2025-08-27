@@ -27,3 +27,9 @@ export class CreateMenuDto {
 }
 
 export class UpdateMenuDto extends PartialType(CreateMenuDto) {}
+
+export class FindMenusParamDto {
+  @ApiProperty()
+  @IsUUID()
+  supplierId: string;
+}

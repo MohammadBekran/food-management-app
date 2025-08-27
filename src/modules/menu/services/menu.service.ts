@@ -17,8 +17,9 @@ import {
 } from 'src/common/enums/message.enum';
 
 import { MenuEntity } from '../entities/menu.entity';
-import { CreateMenuDto } from '../dto/menu.dto';
+import { CreateMenuDto, FindMenusParamDto } from '../dto/menu.dto';
 import { MenuGroupService } from './menu-group.service';
+import { MenuGroupEntity } from '../entities/menu-group.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class MenuService {
@@ -27,6 +28,8 @@ export class MenuService {
 
     @InjectRepository(MenuEntity)
     private menuRepository: Repository<MenuEntity>,
+    @InjectRepository(MenuGroupEntity)
+    private menuGroupRepository: Repository<MenuGroupEntity>,
 
     private menuGroupService: MenuGroupService,
     private s3Service: S3Service,
@@ -63,6 +66,21 @@ export class MenuService {
 
     return {
       message: EPublicMessages.MenuCreatedSuccessfully,
+    };
+  }
+
+  async findAll(findMenusParamDto: FindMenusParamDto) {
+    const { supplierId } = findMenusParamDto;
+
+    const menus = await this.menuGroupRepository.find({
+      where: { supplierId },
+      relations: {
+        items: true,
+      },
+    });
+
+    return {
+      menus,
     };
   }
 }

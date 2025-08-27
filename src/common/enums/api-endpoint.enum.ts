@@ -13,6 +13,7 @@ export enum EApiEndpointNames {
   PATCHUpdateCategory = ':id',
   DELETECategory = ':id',
   POSTCreateMenu = '',
+  GETMenusBySupplierId = 'get-menu-by-supplier-id/:supplierId',
   POSTCreateMenuGroup = '',
   GETMenuGroups = '',
   GETMenuGroup = ':id',

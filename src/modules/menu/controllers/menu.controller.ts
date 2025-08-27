@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -14,8 +16,9 @@ import { EControllerNames } from 'src/common/enums/controller-name.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
 import { UploadFileS3 } from 'src/common/interceptors/upload-file.interceptor';
 
-import { CreateMenuDto } from '../dto/menu.dto';
+import { CreateMenuDto, FindMenusParamDto } from '../dto/menu.dto';
 import { MenuService } from '../services/menu.service';
+import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 
 @Controller(EControllerNames.Menu)
 @ApiTags(EApiTagNames.Menu)
@@ -31,5 +34,11 @@ export class MenuController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     return this.menuService.create(createMenuDto, image);
+  }
+
+  @Get(EApiEndpointNames.GETMenusBySupplierId)
+  @SkipAuth()
+  findAll(@Param() findMenusParamDto: FindMenusParamDto) {
+    return this.menuService.findAll(findMenusParamDto);
   }
 }
