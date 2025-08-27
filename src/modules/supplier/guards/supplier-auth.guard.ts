@@ -4,18 +4,29 @@ import {
   type CanActivate,
   type ExecutionContext,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { isJWT } from 'class-validator';
 import type { Request } from 'express';
 
+import { SKIP_AUTH } from 'src/common/decorators/skip-auth.decorator';
 import { EAuthMessages } from 'src/common/enums/message.enum';
 
 import { SupplierService } from '../supplier.service';
 
 @Injectable()
 export class SupplierAuthGuard implements CanActivate {
-  constructor(private supplierService: SupplierService) {}
+  constructor(
+    private supplierService: SupplierService,
+    private reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isSkippedAuth = this.reflector.get<boolean>(
+      SKIP_AUTH,
+      context.getHandler(),
+    );
+    if (isSkippedAuth) return true;
+
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromRequest(request);
 
