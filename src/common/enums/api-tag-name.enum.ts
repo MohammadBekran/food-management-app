@@ -4,4 +4,6 @@ export enum EApiTagNames {
   Category = 'Category',
   Menu = 'Menu',
   MenuGroup = 'Menu Group',
+  Basket = 'Basket',
+  Discount = 'discount',
 }

@@ -12,14 +12,15 @@ import {
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
+import { DiscountEntity } from 'src/modules/discount/entity/discount.entity';
 import { MenuGroupEntity } from 'src/modules/menu/entities/menu-group.entity';
 import { MenuEntity } from 'src/modules/menu/entities/menu.entity';
 
 import { ESupplierStatus } from '../enums/status.enum';
 import { SupplierOtpEntity } from './otp.entity';
-import { SupplierImageEntity } from './supplier-image.entity';
-import { SupplierDocumentEntity } from './supplier-document.entity';
 import { SupplierContractEntity } from './supplier-contract.entity';
+import { SupplierDocumentEntity } from './supplier-document.entity';
+import { SupplierImageEntity } from './supplier-image.entity';
 
 @Entity(EEntityNames.Supplier)
 export class SupplierEntity extends BaseEntity {
@@ -94,6 +95,9 @@ export class SupplierEntity extends BaseEntity {
 
   @OneToMany(() => MenuGroupEntity, (menuGroup) => menuGroup.supplier)
   menuGroups: MenuGroupEntity;
+
+  @OneToMany(() => DiscountEntity, (discount) => discount.supplier)
+  discounts: DiscountEntity;
 
   @OneToOne(() => SupplierContractEntity, (contract) => contract.supplier)
   contract: SupplierContractEntity;

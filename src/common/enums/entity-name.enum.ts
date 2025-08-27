@@ -11,4 +11,6 @@ export enum EEntityNames {
   Menu = 'menu',
   MenuGroup = 'menu_group',
   MenuFeedback = 'menu_feedback',
+  UserBasket = 'user_basket',
+  Discount = 'discount',
 }

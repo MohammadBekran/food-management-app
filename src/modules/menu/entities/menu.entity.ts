@@ -1,11 +1,12 @@
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
-import { SupplierEntity } from 'src/modules/supplier/entities/supplier.entity';
-import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { EEntityNames } from 'src/common/enums/entity-name.enum';
+import { UserBasketEntity } from 'src/modules/basket/entities/basket.entity';
+import { SupplierEntity } from 'src/modules/supplier/entities/supplier.entity';
 
-import { MenuGroupEntity } from './menu-group.entity';
 import { MenuFeedbackEntity } from './menu-feedback.entity';
+import { MenuGroupEntity } from './menu-group.entity';
 
 @Entity(EEntityNames.Menu)
 export class MenuEntity extends BaseEntity {
@@ -48,4 +49,7 @@ export class MenuEntity extends BaseEntity {
 
   @OneToMany(() => MenuFeedbackEntity, (menuFeedback) => menuFeedback.menu)
   feedbacks: MenuFeedbackEntity[];
+
+  @OneToMany(() => UserBasketEntity, (userBasket) => userBasket.food)
+  baskets: UserBasketEntity[];
 }

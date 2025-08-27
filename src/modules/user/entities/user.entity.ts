@@ -13,6 +13,7 @@ import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { OtpEntity } from './otp.entity';
 import { UserAddressEntity } from './user-address.entity';
 import { MenuFeedbackEntity } from 'src/modules/menu/entities/menu-feedback.entity';
+import { UserBasketEntity } from 'src/modules/basket/entities/basket.entity';
 
 @Entity(EEntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -51,6 +52,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => MenuFeedbackEntity, (menuFeedback) => menuFeedback.user)
   feedbacks: MenuFeedbackEntity[];
+
+  @OneToMany(() => UserBasketEntity, (userBasket) => userBasket.user)
+  baskets: UserBasketEntity[];
 
   @CreateDateColumn({ type: 'time with time zone' })
   created_at: Date;

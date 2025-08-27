@@ -4,4 +4,6 @@ export enum EControllerNames {
   Category = 'category',
   Menu = 'menu',
   MenuGroup = 'menu-group',
+  Basket = 'basket',
+  Discount = 'discount',
 }
