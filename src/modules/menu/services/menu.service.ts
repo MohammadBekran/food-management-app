@@ -21,7 +21,7 @@ import {
 import { MenuEntity } from '../entities/menu.entity';
 import {
   CreateMenuDto,
-  FindMenuParamDto,
+  ActionMenuDto,
   FindMenusParamDto,
   UpdateMenuDto,
 } from '../dto/menu.dto';
@@ -91,9 +91,9 @@ export class MenuService {
     };
   }
 
-  async findOne(findMenuParamDto: FindMenuParamDto) {
+  async findOne(actionMenuDto: ActionMenuDto) {
     const { id: supplierId } = this.req.user!;
-    const { id } = findMenuParamDto;
+    const { id } = actionMenuDto;
 
     const menu = await this.menuRepository.findOne({
       where: { id, supplierId },
@@ -122,6 +122,17 @@ export class MenuService {
 
     return {
       menu,
+    };
+  }
+
+  async delete(actionMenuDto: ActionMenuDto) {
+    const { id } = actionMenuDto;
+
+    await this.checkExistenceById(id);
+    await this.menuRepository.delete({ id });
+
+    return {
+      message: EPublicMessages.MenuDeletedSuccessfully,
     };
   }
 

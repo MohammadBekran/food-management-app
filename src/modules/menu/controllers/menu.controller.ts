@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -19,7 +20,7 @@ import { UploadFileS3 } from 'src/common/interceptors/upload-file.interceptor';
 
 import {
   CreateMenuDto,
-  FindMenuParamDto,
+  ActionMenuDto,
   FindMenusParamDto,
 } from '../dto/menu.dto';
 import { MenuService } from '../services/menu.service';
@@ -47,8 +48,12 @@ export class MenuController {
   }
 
   @Get(EApiEndpointNames.GETMenu)
-  @SkipAuth()
-  find(@Param() findMenuParamDto: FindMenuParamDto) {
-    return this.menuService.findOne(findMenuParamDto);
+  find(@Param() actionMenuDto: ActionMenuDto) {
+    return this.menuService.findOne(actionMenuDto);
+  }
+
+  @Delete(EApiEndpointNames.DELETEMenu)
+  delete(@Param() actionMenuDto: ActionMenuDto) {
+    return this.menuService.delete(actionMenuDto);
   }
 }

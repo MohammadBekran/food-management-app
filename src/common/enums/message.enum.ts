@@ -3,6 +3,7 @@ export enum EPublicMessages {
   CategoryUpdatedSuccessfully = 'Category has been updated successfully',
   CategoryDeletedSuccessfully = 'Category has been deleted successfully',
   MenuCreatedSuccessfully = 'Menu has been created successfully',
+  MenuDeletedSuccessfully = 'Menu has been deleted successfully',
   MenuGroupCreatedSuccessfully = 'Menu group has been created successfully',
   MenuGroupUpdatedSuccessfully = 'Menu group has been updated successfully',
   MenuGroupDeletedSuccessfully = 'Menu group has been deleted successfully',
