@@ -2,6 +2,7 @@ export enum EPublicMessages {
   CategoryCreatedSuccessfully = 'Category has been created successfully',
   CategoryUpdatedSuccessfully = 'Category has been updated successfully',
   CategoryDeletedSuccessfully = 'Category has been deleted successfully',
+  MenuCreatedSuccessfully = 'Menu has been created successfully',
   MenuGroupCreatedSuccessfully = 'Menu group has been created successfully',
   MenuGroupUpdatedSuccessfully = 'Menu group has been updated successfully',
   MenuGroupDeletedSuccessfully = 'Menu group has been deleted successfully',
@@ -45,4 +46,8 @@ export enum EValidationErrorMessages {
   InvalidPhoneNumber = 'Phone number is invalid',
   InvalidAuthCode = 'Code is invalid',
   InvalidEmail = 'Email is invalid',
+}
+
+export enum EInternalServerErrorException {
+  UploadFileFailed = 'Upload file failed',
 }

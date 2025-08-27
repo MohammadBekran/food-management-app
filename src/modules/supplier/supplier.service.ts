@@ -40,6 +40,7 @@ import { S3Service } from '../s3/s3.service';
 import { SupplierImageEntity } from './entities/supplier-image.entity';
 import { SupplierDocumentEntity } from './entities/supplier-document.entity';
 import { SupplierContractEntity } from './entities/supplier-contract.entity';
+import { EFileFolderNames } from 'src/common/enums/file-folder-name.enum';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -207,9 +208,12 @@ export class SupplierService {
 
     const uploadedAcceptedDocument = await this.s3Service.uploadFile(
       acceptedDocument[0],
-      'accepted-documents',
+      EFileFolderNames.AcceptedDocuments,
     );
-    const uploadedImage = await this.s3Service.uploadFile(image[0], 'images');
+    const uploadedImage = await this.s3Service.uploadFile(
+      image[0],
+      EFileFolderNames.Images,
+    );
 
     let supplierImage: SupplierImageEntity | null = null;
     let supplierDocument: SupplierDocumentEntity | null = null;
@@ -256,10 +260,9 @@ export class SupplierService {
       throw new ForbiddenException(EForbiddenMessages.UploadDocuments);
     }
 
-    console.log('contract', file);
     const uploadedContractImage = await this.s3Service.uploadFile(
       file,
-      'contracts',
+      EFileFolderNames.Contracts,
     );
 
     let contractImage: SupplierContractEntity | null = null;

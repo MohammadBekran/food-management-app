@@ -15,10 +15,13 @@ export class MenuEntity extends BaseEntity {
   @Column()
   image: string;
 
+  @Column()
+  imageKey: string;
+
   @Column({ type: 'numeric' })
   price: string;
 
-  @Column({ type: 'numeric' })
+  @Column({ type: 'numeric', default: 0 })
   discount: number;
 
   @Column()

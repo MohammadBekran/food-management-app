@@ -24,7 +24,7 @@ import { MenuGroupService } from '../services/menu-group.service';
 export class MenuGroupController {
   constructor(private readonly menuGroupService: MenuGroupService) {}
 
-  @Post(EApiEndpointNames.POSTCreateMenu)
+  @Post(EApiEndpointNames.POSTCreateMenuGroup)
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   create(@Body() createMenuGroupDto: CreateMenuGroupDto) {
     return this.menuGroupService.create(createMenuGroupDto);
