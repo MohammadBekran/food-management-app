@@ -5,5 +5,5 @@ export enum EApiTagNames {
   Menu = 'Menu',
   MenuGroup = 'Menu Group',
   Basket = 'Basket',
-  Discount = 'discount',
+  Discount = 'Discount',
 }

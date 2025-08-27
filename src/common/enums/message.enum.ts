@@ -10,6 +10,7 @@ export enum EPublicMessages {
   MenuGroupDeletedSuccessfully = 'Menu group has been deleted successfully',
   DocumentUploadedSuccessfully = 'Document has been uploaded successfully',
   ContractUploadedSuccessfully = 'Contract has been uploaded successfully',
+  DiscountCreatedSuccessfully = 'Discount has been created successfully',
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
@@ -17,6 +18,7 @@ export enum EPublicMessages {
 
 export enum ENotBadRequestMessages {
   OtpCodeNotExpired = 'Otp code not expired',
+  EnterOneOfTheAmountOrPercentFields = 'Enter one of the amount or percent fields',
 }
 
 export enum EConflictMessages {
@@ -24,6 +26,7 @@ export enum EConflictMessages {
   SupplierAlreadyExists = 'Supplier already exists',
   NationalCodeAlreadyUsed = 'National code already used by another person',
   EmailAlreadyUsed = 'Email already used by another person',
+  DiscountAlreadyExists = 'Discount with this code already exists',
 }
 
 export enum ENotFoundMessages {
