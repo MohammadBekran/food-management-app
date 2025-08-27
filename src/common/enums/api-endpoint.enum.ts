@@ -14,6 +14,7 @@ export enum EApiEndpointNames {
   DELETECategory = ':id',
   POSTCreateMenu = '',
   GETMenusBySupplierId = 'get-menu-by-supplier-id/:supplierId',
+  GETMenu = ':id',
   POSTCreateMenuGroup = '',
   GETMenuGroups = '',
   GETMenuGroup = ':id',

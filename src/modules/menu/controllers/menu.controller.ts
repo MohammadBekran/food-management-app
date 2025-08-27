@@ -10,15 +10,19 @@ import {
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { SupplierAuth } from 'src/common/decorators/auth.decorator';
+import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
 import { UploadFileS3 } from 'src/common/interceptors/upload-file.interceptor';
 
-import { CreateMenuDto, FindMenusParamDto } from '../dto/menu.dto';
+import {
+  CreateMenuDto,
+  FindMenuParamDto,
+  FindMenusParamDto,
+} from '../dto/menu.dto';
 import { MenuService } from '../services/menu.service';
-import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 
 @Controller(EControllerNames.Menu)
 @ApiTags(EApiTagNames.Menu)
@@ -40,5 +44,11 @@ export class MenuController {
   @SkipAuth()
   findAll(@Param() findMenusParamDto: FindMenusParamDto) {
     return this.menuService.findAll(findMenusParamDto);
+  }
+
+  @Get(EApiEndpointNames.GETMenu)
+  @SkipAuth()
+  find(@Param() findMenuParamDto: FindMenuParamDto) {
+    return this.menuService.findOne(findMenuParamDto);
   }
 }

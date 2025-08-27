@@ -19,7 +19,12 @@ import {
 } from 'src/common/enums/message.enum';
 
 import { MenuEntity } from '../entities/menu.entity';
-import { CreateMenuDto, FindMenusParamDto } from '../dto/menu.dto';
+import {
+  CreateMenuDto,
+  FindMenuParamDto,
+  FindMenusParamDto,
+  UpdateMenuDto,
+} from '../dto/menu.dto';
 import { MenuGroupService } from './menu-group.service';
 import { MenuGroupEntity } from '../entities/menu-group.entity';
 
@@ -83,6 +88,40 @@ export class MenuService {
 
     return {
       menus,
+    };
+  }
+
+  async findOne(findMenuParamDto: FindMenuParamDto) {
+    const { id: supplierId } = this.req.user!;
+    const { id } = findMenuParamDto;
+
+    const menu = await this.menuRepository.findOne({
+      where: { id, supplierId },
+      relations: {
+        menuGroup: true,
+        feedbacks: {
+          user: true,
+        },
+      },
+      select: {
+        menuGroup: {
+          title: true,
+        },
+        feedbacks: {
+          comment: true,
+          createdAt: true,
+          user: {
+            first_name: true,
+            last_name: true,
+          },
+          score: true,
+        },
+      },
+    });
+    if (!menu) throw new NotFoundException(ENotFoundMessages.MenuNotFound);
+
+    return {
+      menu,
     };
   }
 

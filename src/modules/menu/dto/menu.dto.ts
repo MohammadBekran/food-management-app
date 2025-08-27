@@ -33,3 +33,9 @@ export class FindMenusParamDto {
   @IsUUID()
   supplierId: string;
 }
+
+export class FindMenuParamDto {
+  @ApiProperty()
+  @IsUUID()
+  id: string;
+}
