@@ -17,11 +17,13 @@ export enum EPublicMessages {
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
   FoodAddedToBasket = 'Food has been added to your basket successfully',
+  FoodRemovedFromBakst = 'Food has been removed from your basket successfully',
 }
 
 export enum ENotBadRequestMessages {
   OtpCodeNotExpired = 'Otp code not expired',
   EnterOneOfTheAmountOrPercentFields = 'Enter one of the amount or percent fields',
+  BasketNotFound = 'Basket not found',
 }
 
 export enum EConflictMessages {

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { Repository } from 'typeorm';
 import type { Request } from 'express';
@@ -7,7 +7,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BasketDto } from './dto/basket.dto';
 import { MenuService } from '../menu/services/menu.service';
 import { UserBasketEntity } from './entities/basket.entity';
-import { EPublicMessages } from 'src/common/enums/message.enum';
+import {
+  ENotBadRequestMessages,
+  EPublicMessages,
+} from 'src/common/enums/message.enum';
 
 @Injectable()
 export class BasketService {
@@ -46,6 +49,33 @@ export class BasketService {
 
     return {
       message: EPublicMessages.FoodAddedToBasket,
+    };
+  }
+
+  async removeFromBasket(basketDto: BasketDto) {
+    const { id: userId } = this.req.user!;
+    const { foodId } = basketDto;
+
+    await this.menuService.getOne(foodId);
+    const basketItem = await this.userBasketRepository.findOneBy({
+      userId,
+      foodId,
+    });
+
+    if (!basketItem) {
+      throw new NotFoundException(ENotBadRequestMessages.BasketNotFound);
+    }
+
+    if (basketItem.count <= 1) {
+      await this.userBasketRepository.delete(basketItem);
+    } else {
+      basketItem.count -= 1;
+
+      await this.userBasketRepository.save(basketItem);
+    }
+
+    return {
+      message: EPublicMessages.FoodRemovedFromBakst,
     };
   }
 }
