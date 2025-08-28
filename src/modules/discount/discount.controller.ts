@@ -37,12 +37,12 @@ export class DiscountController {
     return this.discountService.update(code, updateDiscountDto);
   }
 
-  @Delete(EApiEndpointNames.GETFindDiscounts)
-  async delete() {
-    return this.discountService.delete();
+  @Delete(EApiEndpointNames.DELETEDiscount)
+  async delete(@Param('code') code: string) {
+    return this.discountService.delete(code);
   }
 
-  @Get(EApiEndpointNames.DELETEDiscount)
+  @Get(EApiEndpointNames.GETFindDiscounts)
   async findAll() {
     return this.discountService.findAll();
   }

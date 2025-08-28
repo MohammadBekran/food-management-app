@@ -97,7 +97,15 @@ export class DiscountService {
     };
   }
 
-  async delete() {}
+  async delete(code: string) {
+    await this.findOne(code);
+
+    await this.discountRepository.delete({ code });
+
+    return {
+      message: EPublicMessages.DiscountDeletedSuccessfully,
+    };
+  }
 
   async findAll() {}
 
