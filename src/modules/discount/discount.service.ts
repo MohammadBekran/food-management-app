@@ -107,7 +107,13 @@ export class DiscountService {
     };
   }
 
-  async findAll() {}
+  async findAll() {
+    const discounts = await this.discountRepository.find();
+
+    return {
+      discounts,
+    };
+  }
 
   async findOne(code: string) {
     const discount = await this.discountRepository.findOneBy({ code });
