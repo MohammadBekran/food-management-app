@@ -2,6 +2,8 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
+  Param,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
@@ -9,11 +11,12 @@ import { DeepPartial, Repository } from 'typeorm';
 import {
   EConflictMessages,
   ENotBadRequestMessages,
+  ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
-import { DiscountEntity } from './entity/discount.entity';
 
-import { CreateDiscountDto } from './dto/discount.dto';
+import { DiscountEntity } from './entity/discount.entity';
+import { CreateDiscountDto, UpdateDiscountDto } from './dto/discount.dto';
 
 @Injectable()
 export class DiscountService {
@@ -54,11 +57,57 @@ export class DiscountService {
     };
   }
 
-  async update() {}
+  async update(discountCode: string, updateDiscountDto: UpdateDiscountDto) {
+    const { code, amount, percent, limit, expires_in } = updateDiscountDto;
+
+    await this.findOne(discountCode);
+
+    const updateDiscountData: DeepPartial<UpdateDiscountDto> = {};
+    if (code) {
+      await this.checkExistenceByCode(code);
+      updateDiscountData.code = code;
+    }
+
+    if ((amount && percent) || (!amount && !percent)) {
+      throw new BadRequestException(
+        ENotBadRequestMessages.EnterOneOfTheAmountOrPercentFields,
+      );
+    }
+    if (amount && !isNaN(parseFloat(amount.toString()))) {
+      updateDiscountData.amount = amount;
+    } else if (percent && !isNaN(parseFloat(percent.toString()))) {
+      updateDiscountData.percent = percent;
+    }
+    if (expires_in && !isNaN(parseInt(expires_in.toString()))) {
+      const time = 1000 * 60 * 60 * 24 * parseInt(expires_in.toString());
+
+      updateDiscountData.expires_in = new Date(new Date().getTime() + time);
+    }
+    if (limit && !isNaN(parseInt(limit.toString()))) {
+      updateDiscountData.limit = limit;
+    }
+
+    await this.discountRepository.update(
+      { code: discountCode },
+      updateDiscountData,
+    );
+
+    return {
+      message: EPublicMessages.DiscountUpdatedSuccessfully,
+    };
+  }
 
   async delete() {}
 
   async findAll() {}
+
+  async findOne(code: string) {
+    const discount = await this.discountRepository.findOneBy({ code });
+    if (!discount)
+      throw new NotFoundException(ENotFoundMessages.DiscountNotFound);
+
+    return discount;
+  }
 
   async checkExistenceByCode(code: string) {
     const discount = await this.discountRepository.findOneBy({ code });

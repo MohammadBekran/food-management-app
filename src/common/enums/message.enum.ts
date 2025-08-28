@@ -11,6 +11,7 @@ export enum EPublicMessages {
   DocumentUploadedSuccessfully = 'Document has been uploaded successfully',
   ContractUploadedSuccessfully = 'Contract has been uploaded successfully',
   DiscountCreatedSuccessfully = 'Discount has been created successfully',
+  DiscountUpdatedSuccessfully = 'Discount has been updated successfully',
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
@@ -34,6 +35,7 @@ export enum ENotFoundMessages {
   AgentNotFound = 'Agent not found',
   MenuNotFound = 'Menu not found',
   MenuGroupNotFound = 'Menu group not found',
+  DiscountNotFound = 'Discount not found',
 }
 
 export enum EAuthMessages {

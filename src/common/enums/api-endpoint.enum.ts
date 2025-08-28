@@ -23,7 +23,7 @@ export enum EApiEndpointNames {
   PUTUpdateMenuGroup = ':id',
   DELETEMenuGroup = ':id',
   POSTCreateDiscount = '',
-  PUTUpdateDiscount = ':id',
-  DELETEDiscount = ':id',
+  PUTUpdateDiscount = ':code',
+  DELETEDiscount = ':code',
   GETFindDiscounts = '',
 }

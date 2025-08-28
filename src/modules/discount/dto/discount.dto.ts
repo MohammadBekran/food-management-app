@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 
 export class CreateDiscountDto {
   @ApiProperty()
@@ -16,3 +16,5 @@ export class CreateDiscountDto {
   @ApiPropertyOptional()
   expires_in: Date;
 }
+
+export class UpdateDiscountDto extends PartialType(CreateDiscountDto) {}

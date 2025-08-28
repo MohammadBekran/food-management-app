@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
@@ -7,7 +15,7 @@ import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
 
 import { DiscountService } from './discount.service';
-import { CreateDiscountDto } from './dto/discount.dto';
+import { CreateDiscountDto, UpdateDiscountDto } from './dto/discount.dto';
 
 @Controller(EControllerNames.Discount)
 @ApiTags(EApiTagNames.Discount)
@@ -22,8 +30,11 @@ export class DiscountController {
 
   @Put(EApiEndpointNames.PUTUpdateDiscount)
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
-  async update() {
-    return this.discountService.update();
+  async update(
+    @Param('code') code: string,
+    @Body() updateDiscountDto: UpdateDiscountDto,
+  ) {
+    return this.discountService.update(code, updateDiscountDto);
   }
 
   @Delete(EApiEndpointNames.GETFindDiscounts)
