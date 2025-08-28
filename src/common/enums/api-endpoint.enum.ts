@@ -26,4 +26,5 @@ export enum EApiEndpointNames {
   PUTUpdateDiscount = ':code',
   DELETEDiscount = ':code',
   GETFindDiscounts = '',
+  POSTAddToBasket = '',
 }

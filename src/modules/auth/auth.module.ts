@@ -11,5 +11,6 @@ import { AuthService } from './auth.service';
   imports: [TypeOrmModule.forFeature([UserEntity, OtpEntity])],
   controllers: [AuthController],
   providers: [AuthService, JwtService],
+  exports: [AuthService, TypeOrmModule],
 })
 export class AuthModule {}

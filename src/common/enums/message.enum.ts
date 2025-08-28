@@ -16,6 +16,7 @@ export enum EPublicMessages {
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
+  FoodAddedToBasket = 'Food has been added to your basket successfully',
 }
 
 export enum ENotBadRequestMessages {

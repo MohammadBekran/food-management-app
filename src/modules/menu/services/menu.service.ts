@@ -163,11 +163,20 @@ export class MenuService {
         },
       },
     });
-    if (!menu) throw new NotFoundException(ENotFoundMessages.MenuNotFound);
+    if (!menu) {
+      throw new NotFoundException(ENotFoundMessages.MenuNotFound);
+    }
 
     return {
       menu,
     };
+  }
+
+  async getOne(id: string) {
+    const menu = await this.menuRepository.findOneBy({ id });
+    if (!menu) throw new NotFoundException(ENotFoundMessages.MenuNotFound);
+
+    return menu;
   }
 
   async delete(actionMenuDto: ActionMenuDto) {
