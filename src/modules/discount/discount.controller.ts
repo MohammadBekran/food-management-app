@@ -6,12 +6,15 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import { Pagination } from 'src/common/decorators/pagination.decorator';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
-import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
 
 import { DiscountService } from './discount.service';
@@ -43,7 +46,8 @@ export class DiscountController {
   }
 
   @Get(EApiEndpointNames.GETFindDiscounts)
-  async findAll() {
-    return this.discountService.findAll();
+  @Pagination()
+  async findAll(@Query() paginationDto: PaginationDto) {
+    return this.discountService.findAll(paginationDto);
   }
 }

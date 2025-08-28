@@ -3,20 +3,24 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-  Param,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import {
   EConflictMessages,
   ENotBadRequestMessages,
   ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
+import {
+  paginationData,
+  paginationGenerator,
+} from 'src/common/utils/pagination.util';
 
-import { DiscountEntity } from './entity/discount.entity';
 import { CreateDiscountDto, UpdateDiscountDto } from './dto/discount.dto';
+import { DiscountEntity } from './entity/discount.entity';
 
 @Injectable()
 export class DiscountService {
@@ -107,10 +111,20 @@ export class DiscountService {
     };
   }
 
-  async findAll() {
-    const discounts = await this.discountRepository.find();
+  async findAll(paginationDto: PaginationDto) {
+    const { page, limit, skip } = paginationData(
+      paginationDto.page,
+      paginationDto.limit,
+    );
+
+    const [discounts, count] = await this.discountRepository.findAndCount({
+      where: {},
+      skip,
+      take: limit,
+    });
 
     return {
+      pagination: paginationGenerator(count, page, limit),
       discounts,
     };
   }
