@@ -27,6 +27,10 @@ export enum EBadRequestMessages {
   BasketNotFound = 'Basket not found',
   CannotUseThisDiscountCode = 'You cannot use this discount code',
   CannotUseDiscountMultipleTimes = 'You cannot use a discount code multiple times',
+  CannotUseGeneralDiscountMultipleTimes = 'You cannot use a general discount code multiple times',
+  DiscountIsNotActive = 'Discount is not active',
+  OutOfDiscountCapacity = 'Out of discount capacity',
+  DiscountIsExpired = 'Discount is expired',
 }
 
 export enum EConflictMessages {

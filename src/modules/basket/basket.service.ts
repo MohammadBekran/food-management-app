@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import type { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -94,12 +94,26 @@ export class BasketService {
     const { code } = basketDiscountDto;
 
     const discount = await this.discountService.findOne(code);
+    if (!discount.active) {
+      throw new BadRequestException(EBadRequestMessages.DiscountIsNotActive);
+    }
+    if (discount?.limit && discount.limit <= discount.usage) {
+      throw new BadRequestException(EBadRequestMessages.OutOfDiscountCapacity);
+    }
+    if (
+      discount?.expires_in &&
+      discount.expires_in.getTime() <= new Date().getTime()
+    ) {
+      throw new BadRequestException(EBadRequestMessages.DiscountIsExpired);
+    }
+
     if (discount.supplierId) {
       const basketDiscount = await this.userBasketRepository.findOne({
         relations: {
           discount: true,
         },
         where: {
+          userId,
           discount: {
             supplierId: discount.supplierId,
           },
@@ -116,6 +130,7 @@ export class BasketService {
           food: true,
         },
         where: {
+          userId,
           food: {
             supplier: {
               id: discount.supplierId,
@@ -126,6 +141,24 @@ export class BasketService {
       if (!basket) {
         throw new BadRequestException(
           EBadRequestMessages.CannotUseThisDiscountCode,
+        );
+      }
+    } else if (!discount.supplierId) {
+      const discount = await this.userBasketRepository.findOne({
+        relations: {
+          discount: true,
+        },
+        where: {
+          userId,
+          discount: {
+            id: Not(IsNull()),
+            supplier: IsNull(),
+          },
+        },
+      });
+      if (discount) {
+        throw new BadRequestException(
+          EBadRequestMessages.CannotUseGeneralDiscountMultipleTimes,
         );
       }
     }
