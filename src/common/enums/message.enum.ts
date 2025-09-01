@@ -20,10 +20,12 @@ export enum EPublicMessages {
   FoodRemovedFromBakst = 'Food has been removed from your basket successfully',
 }
 
-export enum ENotBadRequestMessages {
+export enum EBadRequestMessages {
   OtpCodeNotExpired = 'Otp code not expired',
   EnterOneOfTheAmountOrPercentFields = 'Enter one of the amount or percent fields',
   BasketNotFound = 'Basket not found',
+  CannotUseThisDiscountCode = 'You cannot use this discount code',
+  CannotUseDiscountMultipleTimes = 'You cannot use a discount code multiple times',
 }
 
 export enum EConflictMessages {

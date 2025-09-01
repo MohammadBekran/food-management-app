@@ -10,7 +10,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import {
   EConflictMessages,
-  ENotBadRequestMessages,
+  EBadRequestMessages,
   ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
@@ -37,7 +37,7 @@ export class DiscountService {
     const createDiscountData: DeepPartial<DiscountEntity> = { code };
     if ((amount && percent) || (!amount && !percent)) {
       throw new BadRequestException(
-        ENotBadRequestMessages.EnterOneOfTheAmountOrPercentFields,
+        EBadRequestMessages.EnterOneOfTheAmountOrPercentFields,
       );
     }
     if (amount && !isNaN(parseFloat(amount.toString()))) {
@@ -74,7 +74,7 @@ export class DiscountService {
 
     if ((amount && percent) || (!amount && !percent)) {
       throw new BadRequestException(
-        ENotBadRequestMessages.EnterOneOfTheAmountOrPercentFields,
+        EBadRequestMessages.EnterOneOfTheAmountOrPercentFields,
       );
     }
     if (amount && !isNaN(parseFloat(amount.toString()))) {

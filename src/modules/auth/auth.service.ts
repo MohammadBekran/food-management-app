@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
 import {
   EAuthMessages,
-  ENotBadRequestMessages,
+  EBadRequestMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
 import type { TTokenPayload } from 'src/common/types/payload.type';
@@ -102,7 +102,7 @@ export class AuthService {
 
     if (otp) {
       if (otp.expires_in > new Date()) {
-        throw new BadRequestException(ENotBadRequestMessages.OtpCodeNotExpired);
+        throw new BadRequestException(EBadRequestMessages.OtpCodeNotExpired);
       }
 
       otp.code = code;

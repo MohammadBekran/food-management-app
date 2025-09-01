@@ -8,7 +8,7 @@ import { EControllerNames } from 'src/common/enums/controller-name.enum';
 import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
 
 import { BasketService } from './basket.service';
-import { BasketDto } from './dto/basket.dto';
+import { BasketDiscountDto, BasketDto } from './dto/basket.dto';
 
 @Controller(EControllerNames.Basket)
 @ApiTags(EApiTagNames.Basket)
@@ -26,5 +26,11 @@ export class BasketController {
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   removeFromBasket(@Body() basketDto: BasketDto) {
     return this.basketService.removeFromBasket(basketDto);
+  }
+
+  @Post(EApiEndpointNames.AddDiscount)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
+  addDiscount(@Body() basketDto: BasketDiscountDto) {
+    return this.basketService.addDiscount(basketDto);
   }
 }

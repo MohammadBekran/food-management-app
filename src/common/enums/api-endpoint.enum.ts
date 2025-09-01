@@ -28,4 +28,5 @@ export enum EApiEndpointNames {
   GETFindDiscounts = '',
   POSTAddToBasket = '',
   DELETEFromBasket = '',
+  AddDiscount = 'add-discount',
 }

@@ -1,16 +1,23 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { Repository } from 'typeorm';
 import type { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { BasketDto } from './dto/basket.dto';
-import { MenuService } from '../menu/services/menu.service';
-import { UserBasketEntity } from './entities/basket.entity';
 import {
-  ENotBadRequestMessages,
+  EBadRequestMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
+
+import { BasketDiscountDto, BasketDto } from './dto/basket.dto';
+import { MenuService } from '../menu/services/menu.service';
+import { UserBasketEntity } from './entities/basket.entity';
+import { DiscountService } from '../discount/discount.service';
 
 @Injectable()
 export class BasketService {
@@ -20,6 +27,8 @@ export class BasketService {
 
     @InjectRepository(UserBasketEntity)
     private userBasketRepository: Repository<UserBasketEntity>,
+
+    private discountService: DiscountService,
   ) {}
 
   async addToBasket(basketDto: BasketDto) {
@@ -63,7 +72,7 @@ export class BasketService {
     });
 
     if (!basketItem) {
-      throw new NotFoundException(ENotBadRequestMessages.BasketNotFound);
+      throw new NotFoundException(EBadRequestMessages.BasketNotFound);
     }
 
     if (basketItem.count <= 1) {
@@ -78,4 +87,53 @@ export class BasketService {
       message: EPublicMessages.FoodRemovedFromBakst,
     };
   }
+
+  async addDiscount(basketDiscountDto: BasketDiscountDto) {
+    const { id: userId } = this.req.user!;
+    const { code } = basketDiscountDto;
+
+    const discount = await this.discountService.findOne(code);
+    if (discount.supplierId) {
+      const basketDiscount = await this.userBasketRepository.findOne({
+        relations: {
+          discount: true,
+        },
+        where: {
+          discount: {
+            supplierId: discount.supplierId,
+          },
+        },
+      });
+      if (basketDiscount) {
+        throw new BadRequestException(
+          EBadRequestMessages.CannotUseDiscountMultipleTimes,
+        );
+      }
+
+      const basket = await this.userBasketRepository.findOne({
+        relations: {
+          food: true,
+        },
+        where: {
+          food: {
+            supplier: {
+              id: discount.supplierId,
+            },
+          },
+        },
+      });
+      if (!basket) {
+        throw new BadRequestException(
+          EBadRequestMessages.CannotUseThisDiscountCode,
+        );
+      }
+    }
+
+    await this.userBasketRepository.insert({
+      discountId: discount.id,
+      userId,
+    });
+  }
+
+  async removeDiscount() {}
 }

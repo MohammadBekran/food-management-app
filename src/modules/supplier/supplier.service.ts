@@ -20,7 +20,7 @@ import {
   EAuthMessages,
   ENotFoundMessages,
   EPublicMessages,
-  ENotBadRequestMessages,
+  EBadRequestMessages,
   EForbiddenMessages,
 } from 'src/common/enums/message.enum';
 import type { TTokenPayload } from 'src/common/types/payload.type';
@@ -298,7 +298,7 @@ export class SupplierService {
 
     if (otp) {
       if (otp.expires_in > new Date()) {
-        throw new BadRequestException(ENotBadRequestMessages.OtpCodeNotExpired);
+        throw new BadRequestException(EBadRequestMessages.OtpCodeNotExpired);
       }
 
       otp.code = code;

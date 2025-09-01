@@ -6,3 +6,8 @@ export class BasketDto {
   @IsUUID()
   foodId: string;
 }
+
+export class BasketDiscountDto {
+  @ApiProperty()
+  code: string;
+}
