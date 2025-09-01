@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import {
   EBadRequestMessages,
+  ENotFoundMessages,
   EPublicMessages,
 } from 'src/common/enums/message.enum';
 
@@ -139,5 +140,23 @@ export class BasketService {
     };
   }
 
-  async removeDiscount() {}
+  async removeDiscount(basketDiscountDto: BasketDiscountDto) {
+    const { id: userId } = this.req.user!;
+    const { code } = basketDiscountDto;
+
+    const discount = await this.discountService.findOne(code);
+    const basketDiscount = await this.userBasketRepository.findOneBy({
+      userId,
+      discountId: discount.id,
+    });
+    if (!basketDiscount) {
+      throw new NotFoundException(ENotFoundMessages.DiscountNotFound);
+    }
+
+    await this.userBasketRepository.delete({ userId, discountId: discount.id });
+
+    return {
+      message: EPublicMessages.DiscountDeletedSuccessfully,
+    };
+  }
 }
