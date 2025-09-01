@@ -28,9 +28,15 @@ export class BasketController {
     return this.basketService.removeFromBasket(basketDto);
   }
 
-  @Post(EApiEndpointNames.AddDiscount)
+  @Post(EApiEndpointNames.POSTAddDiscount)
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   addDiscount(@Body() basketDto: BasketDiscountDto) {
     return this.basketService.addDiscount(basketDto);
+  }
+
+  @Delete(EApiEndpointNames.DELETERemoveDiscount)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
+  removeDiscount(@Body() basketDto: BasketDiscountDto) {
+    return this.basketService.removeDiscount(basketDto);
   }
 }
