@@ -10,6 +10,9 @@ export class DiscountEntity extends BaseEntity {
   @Column()
   code: string;
 
+  @Column({ default: true })
+  active: boolean;
+
   @Column({ type: 'numeric', nullable: true })
   percent: number;
 
