@@ -13,6 +13,7 @@ export enum EPublicMessages {
   DiscountCreatedSuccessfully = 'Discount has been created successfully',
   DiscountUpdatedSuccessfully = 'Discount has been updated successfully',
   DiscountDeletedSuccessfully = 'Discount has been deleted successfully',
+  DiscountAddedSuccessfully = 'Discount has been added successfully',
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',

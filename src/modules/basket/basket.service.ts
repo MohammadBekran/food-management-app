@@ -133,6 +133,10 @@ export class BasketService {
       discountId: discount.id,
       userId,
     });
+
+    return {
+      message: EPublicMessages.DiscountAddedSuccessfully,
+    };
   }
 
   async removeDiscount() {}
