@@ -18,7 +18,7 @@ export enum EPublicMessages {
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
   FoodAddedToBasket = 'Food has been added to your basket successfully',
-  FoodRemovedFromBakst = 'Food has been removed from your basket successfully',
+  FoodRemovedFromBasket = 'Food has been removed from your basket successfully',
 }
 
 export enum EBadRequestMessages {
