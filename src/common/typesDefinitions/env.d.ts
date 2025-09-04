@@ -17,5 +17,9 @@ namespace NodeJS {
     JWT_USER_REFRESH_TOKEN_SECRET: string;
     JWT_SUPPLIER_ACCESS_TOKEN_SECRET: string;
     JWT_SUPPLIER_REFRESH_TOKEN_SECRET: string;
+
+    ZARINPAL_REQUEST_URL: string;
+    ZARINPAL_VERIFY_URL: string;
+    ZARINPAL_MERCHANT_ID: string;
   }
 }
