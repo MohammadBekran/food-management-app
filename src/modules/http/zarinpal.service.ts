@@ -10,6 +10,6 @@ export class ZarinpalService {
   }
 
   async verifyPaymentRequest(data: unknown) {
-    this.httpService.post(process.env.ZARINPAL_VERIFY_URL data);
+    this.httpService.post(process.env.ZARINPAL_VERIFY_URL, data);
   }
 }
