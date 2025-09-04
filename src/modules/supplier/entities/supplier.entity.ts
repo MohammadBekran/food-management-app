@@ -15,6 +15,7 @@ import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 import { DiscountEntity } from 'src/modules/discount/entity/discount.entity';
 import { MenuGroupEntity } from 'src/modules/menu/entities/menu-group.entity';
 import { MenuEntity } from 'src/modules/menu/entities/menu.entity';
+import { OrderItemEntity } from 'src/modules/order/entities/order-item.entity';
 
 import { ESupplierStatus } from '../enums/status.enum';
 import { SupplierOtpEntity } from './otp.entity';
@@ -98,6 +99,9 @@ export class SupplierEntity extends BaseEntity {
 
   @OneToMany(() => DiscountEntity, (discount) => discount.supplier)
   discounts: DiscountEntity;
+
+  @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.supplier)
+  orders: OrderItemEntity;
 
   @OneToOne(() => SupplierContractEntity, (contract) => contract.supplier)
   contract: SupplierContractEntity;

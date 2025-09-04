@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { UserBasketEntity } from 'src/modules/basket/entities/basket.entity';
+import { OrderItemEntity } from 'src/modules/order/entities/order-item.entity';
 import { SupplierEntity } from 'src/modules/supplier/entities/supplier.entity';
 
 import { MenuFeedbackEntity } from './menu-feedback.entity';
@@ -55,4 +56,7 @@ export class MenuEntity extends BaseEntity {
 
   @OneToMany(() => UserBasketEntity, (userBasket) => userBasket.food)
   baskets: UserBasketEntity[];
+
+  @OneToMany(() => OrderItemEntity, (menuItem) => menuItem.food)
+  orders: OrderItemEntity[];
 }

@@ -9,11 +9,13 @@ import {
 
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
+import { UserBasketEntity } from 'src/modules/basket/entities/basket.entity';
+import { MenuFeedbackEntity } from 'src/modules/menu/entities/menu-feedback.entity';
+import { OrderEntity } from 'src/modules/order/entities/order.entity';
+import { PaymentEntity } from 'src/modules/payment/payment.entity';
 
 import { OtpEntity } from './otp.entity';
 import { UserAddressEntity } from './user-address.entity';
-import { MenuFeedbackEntity } from 'src/modules/menu/entities/menu-feedback.entity';
-import { UserBasketEntity } from 'src/modules/basket/entities/basket.entity';
 
 @Entity(EEntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -55,6 +57,12 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => UserBasketEntity, (userBasket) => userBasket.user)
   baskets: UserBasketEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.user)
+  orders: OrderEntity[];
+
+  @OneToMany(() => PaymentEntity, (payment) => payment.user)
+  payments: PaymentEntity[];
 
   @CreateDateColumn({ type: 'time with time zone' })
   created_at: Date;
