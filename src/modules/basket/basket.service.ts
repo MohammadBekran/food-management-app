@@ -77,7 +77,7 @@ export class BasketService {
     }
 
     if (basketItem.count <= 1) {
-      await this.userBasketRepository.delete(basketItem);
+      await this.userBasketRepository.delete({ userId, foodId });
     } else {
       basketItem.count -= 1;
 
@@ -85,7 +85,120 @@ export class BasketService {
     }
 
     return {
-      message: EPublicMessages.FoodRemovedFromBakst,
+      message: EPublicMessages.FoodRemovedFromBasket,
+    };
+  }
+
+  async getBasket() {
+    const { id: userId } = this.req.user!;
+    const basketItems = await this.userBasketRepository.find({
+      relations: {
+        discount: true,
+        food: {
+          supplier: true,
+        },
+      },
+      where: {
+        userId,
+      },
+    });
+
+    const foods = basketItems.filter((item) => item.foodId);
+    const supplierDiscounts = basketItems.filter(
+      (item) => item?.discount?.supplierId,
+    );
+    const generalDiscount = basketItems.find(
+      (item) => item?.discount?.id && !item?.discount?.supplierId,
+    );
+    let totalAmount = 0;
+    let paymentAmount = 0;
+    let totalDiscountAmount = 0;
+    let foodList: object[] = [];
+
+    for (const item of foods) {
+      let discountAmount = 0;
+      let discountCode: string | null = null;
+
+      const { food, count } = item;
+      const supplierId = food.supplierId;
+      let foodPrice = food.price * count;
+
+      totalAmount += food.price * count;
+
+      if (food.is_active_discount && food.discount > 0) {
+        discountAmount += foodPrice * (food.discount / 100);
+        foodPrice = foodPrice - foodPrice * (food.discount / 100);
+      }
+      const discountItem = supplierDiscounts.find(
+        ({ discount }) => discount.supplierId === supplierId,
+      );
+      if (discountItem) {
+        const {
+          discount: { active, amount, percent, limit, usage, code },
+        } = discountItem;
+
+        if (active) {
+          if (!limit || (limit && limit > usage)) {
+            discountCode = code;
+            if (percent && percent > 0) {
+              discountAmount += foodPrice * (percent / 100);
+              foodPrice = foodPrice - foodPrice * (percent / 100);
+            } else if (amount && amount > 0) {
+              discountAmount += amount;
+              foodPrice = amount > foodPrice ? 0 : foodPrice - amount;
+            }
+          }
+        }
+      }
+
+      paymentAmount += foodPrice;
+      totalDiscountAmount += discountAmount;
+      foodList.push({
+        name: food.name,
+        description: food.description,
+        count,
+        image: food.image,
+        price: food.price,
+        totalAmount: food.price * count,
+        discountAmount,
+        paymentAmount: food.price * count - discountAmount,
+        discountCode,
+        supplierId,
+        supplierName: food.supplier.store_name,
+        supplierImage: food?.supplier?.images,
+      });
+    }
+
+    let generalDiscountDetail = {};
+    if (generalDiscount?.discount?.active) {
+      const { discount } = generalDiscount;
+
+      if (discount?.limit && discount?.limit > discount.usage) {
+        let discountAmount = 0;
+        if (discount.percent > 0) {
+          discountAmount = paymentAmount * (discount.percent / 100);
+        } else if (discount.amount > 0) {
+          discountAmount = discount.amount;
+        }
+        paymentAmount =
+          discountAmount > paymentAmount ? 0 : paymentAmount - discountAmount;
+        totalDiscountAmount += discountAmount;
+
+        generalDiscountDetail = {
+          code: discount.code,
+          percent: discount.percent,
+          amount: discount.amount,
+          paymentAmount,
+        };
+      }
+    }
+
+    return {
+      paymentAmount,
+      totalAmount,
+      totalDiscountAmount,
+      foodList,
+      generalDiscountDetail,
     };
   }
 

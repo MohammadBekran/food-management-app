@@ -10,7 +10,7 @@ export class CreateMenuDto {
   image: string;
 
   @ApiProperty()
-  price: string;
+  price: number;
 
   @ApiPropertyOptional()
   discount: number;

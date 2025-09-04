@@ -10,7 +10,7 @@ import { EBasketDiscountType } from '../enums/discount-type.enum';
 
 @Entity(EEntityNames.UserBasket)
 export class UserBasketEntity extends BaseEntity {
-  @Column()
+  @Column({ nullable: true })
   count: number;
 
   @Column({ type: 'enum', enum: EBasketDiscountType, nullable: true })
@@ -19,7 +19,7 @@ export class UserBasketEntity extends BaseEntity {
   @Column({ nullable: true })
   discountId: string;
 
-  @Column()
+  @Column({ nullable: true })
   foodId: string;
 
   @Column()
