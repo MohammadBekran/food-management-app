@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
-import { PaymentEntity } from 'src/modules/payment/payment.entity';
+import { PaymentEntity } from 'src/modules/payment/entities/payment.entity';
 import { UserAddressEntity } from 'src/modules/user/entities/user-address.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 

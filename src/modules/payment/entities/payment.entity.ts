@@ -2,8 +2,8 @@ import { Column, CreateDateColumn, Entity, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { EEntityNames } from 'src/common/enums/entity-name.enum';
-import { OrderEntity } from '../order/entities/order.entity';
-import { UserEntity } from '../user/entities/user.entity';
+import { OrderEntity } from 'src/modules/order/entities/order.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 @Entity(EEntityNames.Payment)
 export class PaymentEntity extends BaseEntity {

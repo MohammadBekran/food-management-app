@@ -1,6 +1,7 @@
 namespace NodeJS {
   interface ProcessEnv {
     PORT: string;
+    PAYMENT_GATEWAY_URL: string;
 
     DB_NAME: string;
     DB_HOST: string;
@@ -20,6 +21,7 @@ namespace NodeJS {
 
     ZARINPAL_REQUEST_URL: string;
     ZARINPAL_VERIFY_URL: string;
+    ZARINPAL_GATEWAY_URL: string;
     ZARINPAL_MERCHANT_ID: string;
   }
 }

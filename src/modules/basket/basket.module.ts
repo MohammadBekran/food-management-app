@@ -17,5 +17,6 @@ import { DiscountModule } from '../discount/discount.module';
   ],
   controllers: [BasketController],
   providers: [BasketService],
+  exports: [TypeOrmModule, BasketService],
 })
 export class BasketModule {}

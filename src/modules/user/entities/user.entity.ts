@@ -12,7 +12,7 @@ import { EEntityNames } from 'src/common/enums/entity-name.enum';
 import { UserBasketEntity } from 'src/modules/basket/entities/basket.entity';
 import { MenuFeedbackEntity } from 'src/modules/menu/entities/menu-feedback.entity';
 import { OrderEntity } from 'src/modules/order/entities/order.entity';
-import { PaymentEntity } from 'src/modules/payment/payment.entity';
+import { PaymentEntity } from 'src/modules/payment/entities/payment.entity';
 
 import { OtpEntity } from './otp.entity';
 import { UserAddressEntity } from './user-address.entity';

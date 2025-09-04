@@ -69,4 +69,5 @@ export enum EValidationErrorMessages {
 
 export enum EInternalServerErrorException {
   UploadFileFailed = 'Upload file failed',
+  UnexpectedZarinpalError = 'Unexpected Zarinpal error',
 }
