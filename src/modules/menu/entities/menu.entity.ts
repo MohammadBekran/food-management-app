@@ -20,7 +20,10 @@ export class MenuEntity extends BaseEntity {
   imageKey: string;
 
   @Column({ type: 'numeric' })
-  price: string;
+  price: number;
+
+  @Column({ default: false })
+  is_active_discount: boolean;
 
   @Column({ type: 'numeric', default: 0 })
   discount: number;
