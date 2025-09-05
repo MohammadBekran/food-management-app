@@ -1,6 +1,7 @@
 export enum EApiEndpointNames {
   POSTUserSendOtp = 'send-otp',
   POSTUserCheckOtp = 'check-otp',
+  GETUserAddresses = '',
   POSTSupplierSignup = 'signup',
   POSTSupplierSendOtp = 'send-otp',
   POSTSupplierCheckOtp = 'check-otp',

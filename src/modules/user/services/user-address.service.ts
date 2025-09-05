@@ -17,6 +17,16 @@ export class UserAddressService {
     private userAddressRepository: Repository<UserAddressEntity>,
   ) {}
 
+  async find() {
+    const { id: userId } = this.req.user!;
+
+    const addresses = await this.userAddressRepository.find({
+      where: { userId },
+    });
+
+    return { addresses };
+  }
+
   async checkExistenceById(id: string) {
     const { id: userId } = this.req.user!;
 

@@ -1,5 +1,6 @@
 export enum EApiTagNames {
   Auth = 'Auth',
+  UserAddress = 'User Address',
   Supplier = 'Supplier',
   Category = 'Category',
   Menu = 'Menu',

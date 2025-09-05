@@ -9,12 +9,13 @@ import { HttpApiModule } from '../http/http.module';
 import { MenuModule } from '../menu/menu.module';
 import { PaymentModule } from '../payment/payment.module';
 import { SupplierModule } from '../supplier/supplier.module';
-
+import { UserModule } from '../user/user.module';
 @Module({
   imports: [
     DatabaseModule,
     HttpApiModule,
     AuthModule,
+    UserModule,
     SupplierModule,
     CategoryModule,
     MenuModule,
