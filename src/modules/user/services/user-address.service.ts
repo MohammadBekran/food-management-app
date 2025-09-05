@@ -4,9 +4,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import type { Request } from 'express';
 import { Repository } from 'typeorm';
 
-import { ENotFoundMessages } from 'src/common/enums/message.enum';
+import {
+  ENotFoundMessages,
+  EPublicMessages,
+} from 'src/common/enums/message.enum';
 
 import { UserAddressEntity } from '../entities/user-address.entity';
+import { CreateUserAddressDto } from '../dto/user-address.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserAddressService {
@@ -39,6 +43,25 @@ export class UserAddressService {
     }
 
     return address;
+  }
+
+  async create(createUserAddressDto: CreateUserAddressDto) {
+    const { id: userId } = this.req.user!;
+    const { title, province, city, address, postal_code } =
+      createUserAddressDto;
+
+    await this.userAddressRepository.insert({
+      userId,
+      title,
+      province,
+      city,
+      address,
+      postal_code,
+    });
+
+    return {
+      message: EPublicMessages.AddressCreatedSuccessfully,
+    };
   }
 
   async checkExistenceById(id: string) {
