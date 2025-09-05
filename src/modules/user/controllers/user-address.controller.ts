@@ -1,20 +1,21 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   Put,
-  Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+import { UserAuth } from 'src/common/decorators/auth.decorator';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
-import { UserAuth } from 'src/common/decorators/auth.decorator';
 
-import { UserAddressService } from '../services/user-address.service';
 import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
+import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
+import { UserAddressService } from '../services/user-address.service';
 
 import {
   CreateUserAddressDto,
@@ -38,11 +39,13 @@ export class UserAddressController {
   }
 
   @Post(EApiEndpointNames.POSTUserAddress)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   create(@Body() createUserAddressDto: CreateUserAddressDto) {
     return this.userAddressService.create(createUserAddressDto);
   }
 
   @Put(EApiEndpointNames.PUTUpdateUserAddress)
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   update(
     @Param('id') id: string,
     @Body() updateUserAddressDto: UpdateUserAddressDto,
