@@ -27,6 +27,20 @@ export class UserAddressService {
     return { addresses };
   }
 
+  async findOne(id: string) {
+    const { id: userId } = this.req.user!;
+
+    const address = await this.userAddressRepository.findOneBy({
+      userId,
+      id,
+    });
+    if (!address) {
+      throw new NotFoundException(ENotFoundMessages.AddressNotFound);
+    }
+
+    return address;
+  }
+
   async checkExistenceById(id: string) {
     const { id: userId } = this.req.user!;
 
