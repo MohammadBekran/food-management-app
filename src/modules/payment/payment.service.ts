@@ -1,16 +1,28 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import type { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { Request } from 'express';
 import { Repository } from 'typeorm';
 
-import { EPublicMessages } from 'src/common/enums/message.enum';
+import {
+  EConflictMessages,
+  ENotFoundMessages,
+  EPublicMessages,
+} from 'src/common/enums/message.enum';
 
-import { InitiatePaymentDto, PaymentDto } from './dto/payment.dto';
 import { BasketService } from '../basket/basket.service';
-import { PaymentEntity } from './entities/payment.entity';
 import { ZarinpalService } from '../http/zarinpal.service';
+import { EOrderStatus } from '../order/enums/status.enum';
 import { OrderService } from '../order/order.service';
+import { InitiatePaymentDto, PaymentDto } from './dto/payment.dto';
+import { PaymentEntity } from './entities/payment.entity';
+import { EPaymentStatus } from './enums/status.enum';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PaymentService {
@@ -76,5 +88,34 @@ export class PaymentService {
     });
 
     return await this.paymentRepository.save(payment);
+  }
+
+  async verifyPayment(authority: string, status: string) {
+    const payment = await this.checkExistenceByAuthority(authority);
+    if (payment.status) {
+      throw new ConflictException(EConflictMessages.PaymentAlreadyVerified);
+    }
+
+    if (status === EPaymentStatus.OK) {
+      payment.status = true;
+      await this.paymentRepository.save(payment);
+
+      const order = await this.orderService.findOne(payment.orderId);
+      order.status = EOrderStatus.Paid;
+      await this.orderService.save(order);
+
+      return `${process.env.FRONTEND_URL}/payment?status=success`;
+    } else {
+      return `${process.env.FRONTEND_URL}/payment?status=failure`;
+    }
+  }
+
+  async checkExistenceByAuthority(authority: string) {
+    const payment = await this.paymentRepository.findOneBy({ authority });
+    if (!payment) {
+      throw new NotFoundException(ENotFoundMessages.PaymentNotFound);
+    }
+
+    return payment;
   }
 }

@@ -2,6 +2,7 @@ namespace NodeJS {
   interface ProcessEnv {
     PORT: string;
     PAYMENT_GATEWAY_URL: string;
+    FRONTEND_URL: string;
 
     DB_NAME: string;
     DB_HOST: string;

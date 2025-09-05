@@ -32,4 +32,5 @@ export enum EApiEndpointNames {
   DELETERemoveDiscount = 'remove-discount',
   GETBasket = '',
   POSTPayment = '',
+  GETVerifyPayment = 'verify',
 }

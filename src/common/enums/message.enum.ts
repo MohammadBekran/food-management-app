@@ -41,6 +41,7 @@ export enum EConflictMessages {
   NationalCodeAlreadyUsed = 'National code already used by another person',
   EmailAlreadyUsed = 'Email already used by another person',
   DiscountAlreadyExists = 'Discount with this code already exists',
+  PaymentAlreadyVerified = 'Payment already verified',
 }
 
 export enum ENotFoundMessages {
@@ -50,6 +51,8 @@ export enum ENotFoundMessages {
   MenuGroupNotFound = 'Menu group not found',
   DiscountNotFound = 'Discount not found',
   AddressNotFound = 'Address not found',
+  PaymentNotFound = 'Payment not found',
+  OrderNotFound = 'Order not found',
 }
 
 export enum EAuthMessages {
