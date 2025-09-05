@@ -4,7 +4,10 @@ import { catchError, lastValueFrom, map } from 'rxjs';
 
 import { EInternalServerErrorException } from 'src/common/enums/message.enum';
 
-import type { ISendPaymentRequestData } from './interfaces/send-payment-request-data.interface';
+import type {
+  ISendPaymentRequestData,
+  IVerifyPaymentRequestData,
+} from './interfaces/send-payment-request-data.interface';
 
 @Injectable()
 export class ZarinpalService {
@@ -18,7 +21,7 @@ export class ZarinpalService {
       description,
       metadata: {
         email: user?.email ?? '',
-        mobile: user?.mobile ?? '',
+        mobile: user?.phone ?? '',
       },
       callback_url: process.env.PAYMENT_GATEWAY_URL,
     };
@@ -48,7 +51,29 @@ export class ZarinpalService {
     }
   }
 
-  async verifyPaymentRequest(data: unknown) {
-    this.httpService.post(process.env.ZARINPAL_VERIFY_URL, data);
+  async verifyPaymentRequest(data: IVerifyPaymentRequestData) {
+    const { authority, amount } = data;
+    const verifyPaymentPayload = {
+      authority,
+      amount,
+      merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+    };
+
+    const result = await lastValueFrom(
+      this.httpService
+        .post(process.env.ZARINPAL_VERIFY_URL, verifyPaymentPayload)
+        .pipe(map((res) => res.data))
+        .pipe(
+          catchError((error) => {
+            console.error(error);
+
+            throw new InternalServerErrorException(
+              EInternalServerErrorException.UnexpectedZarinpalError,
+            );
+          }),
+        ),
+    );
+
+    return result;
   }
 }

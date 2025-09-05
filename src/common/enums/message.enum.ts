@@ -14,6 +14,7 @@ export enum EPublicMessages {
   DiscountUpdatedSuccessfully = 'Discount has been updated successfully',
   DiscountDeletedSuccessfully = 'Discount has been deleted successfully',
   DiscountAddedSuccessfully = 'Discount has been added successfully',
+  PaymentDoneSuccessfully = 'Payment has been done successfully',
   OtpSentSuccessfully = 'Otp has been sent successfully',
   LoggedInSuccessfully = 'Logged in successfully',
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
@@ -31,6 +32,7 @@ export enum EBadRequestMessages {
   DiscountIsNotActive = 'Discount is not active',
   OutOfDiscountCapacity = 'Out of discount capacity',
   DiscountIsExpired = 'Discount is expired',
+  FoodListIsEmpty = 'Your food list is empty',
 }
 
 export enum EConflictMessages {
@@ -47,6 +49,7 @@ export enum ENotFoundMessages {
   MenuNotFound = 'Menu not found',
   MenuGroupNotFound = 'Menu group not found',
   DiscountNotFound = 'Discount not found',
+  AddressNotFound = 'Address not found',
 }
 
 export enum EAuthMessages {

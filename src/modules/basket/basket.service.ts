@@ -5,9 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { IsNull, Not, Repository } from 'typeorm';
-import type { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
+import type { Request } from 'express';
+import { IsNull, Not, Repository } from 'typeorm';
 
 import {
   EBadRequestMessages,
@@ -15,10 +15,15 @@ import {
   EPublicMessages,
 } from 'src/common/enums/message.enum';
 
-import { BasketDiscountDto, BasketDto } from './dto/basket.dto';
-import { MenuService } from '../menu/services/menu.service';
-import { UserBasketEntity } from './entities/basket.entity';
 import { DiscountService } from '../discount/discount.service';
+import { MenuService } from '../menu/services/menu.service';
+import { BasketDiscountDto, BasketDto } from './dto/basket.dto';
+import { UserBasketEntity } from './entities/basket.entity';
+import type {
+  IBasketFoodItem,
+  IGeneralDiscountDetail,
+  IGetBasketResponse,
+} from './interfaces/get-basket-response.interface';
 
 @Injectable()
 export class BasketService {
@@ -89,7 +94,7 @@ export class BasketService {
     };
   }
 
-  async getBasket() {
+  async getBasket(): Promise<IGetBasketResponse> {
     const { id: userId } = this.req.user!;
     const basketItems = await this.userBasketRepository.find({
       relations: {
@@ -113,7 +118,7 @@ export class BasketService {
     let totalAmount = 0;
     let paymentAmount = 0;
     let totalDiscountAmount = 0;
-    let foodList: object[] = [];
+    let foodList: IBasketFoodItem[] = [];
 
     for (const item of foods) {
       let discountAmount = 0;
@@ -154,6 +159,7 @@ export class BasketService {
       paymentAmount += foodPrice;
       totalDiscountAmount += discountAmount;
       foodList.push({
+        foodId: food.id,
         name: food.name,
         description: food.description,
         count,
@@ -165,11 +171,11 @@ export class BasketService {
         discountCode,
         supplierId,
         supplierName: food.supplier.store_name,
-        supplierImage: food?.supplier?.images,
       });
     }
 
-    let generalDiscountDetail = {};
+    let generalDiscountDetail: IGeneralDiscountDetail =
+      {} as IGeneralDiscountDetail;
     if (generalDiscount?.discount?.active) {
       const { discount } = generalDiscount;
 

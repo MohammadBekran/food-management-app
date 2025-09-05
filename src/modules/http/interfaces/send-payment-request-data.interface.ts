@@ -3,7 +3,11 @@ export interface ISendPaymentRequestData {
   description: string;
   user: {
     email: string;
-    mobile: string;
+    phone: string;
   };
-  callback_url: string;
+}
+
+export interface IVerifyPaymentRequestData {
+  authority: string;
+  amount: number;
 }

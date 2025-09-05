@@ -6,4 +6,5 @@ export enum EControllerNames {
   MenuGroup = 'menu-group',
   Basket = 'basket',
   Discount = 'discount',
+  Payment = 'payment',
 }
