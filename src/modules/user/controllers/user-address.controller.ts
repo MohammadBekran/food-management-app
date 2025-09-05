@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
@@ -17,5 +17,10 @@ export class UserAddressController {
   @Get(EApiEndpointNames.GETUserAddresses)
   findAll() {
     return this.userAddressService.find();
+  }
+
+  @Get(EApiEndpointNames.GETUserAddress)
+  findOne(@Param('id') id: string) {
+    return this.userAddressService.findOne(id);
   }
 }
