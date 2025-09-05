@@ -1,5 +1,6 @@
 export enum EPublicMessages {
   AddressCreatedSuccessfully = 'Address has been created successfully',
+  AddressUpdatedSuccessfully = 'Address has been updated successfully',
   CategoryCreatedSuccessfully = 'Category has been created successfully',
   CategoryUpdatedSuccessfully = 'Category has been updated successfully',
   CategoryDeletedSuccessfully = 'Category has been deleted successfully',

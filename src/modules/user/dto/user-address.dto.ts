@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 
 export class CreateUserAddressDto {
   @ApiProperty()
@@ -16,3 +16,5 @@ export class CreateUserAddressDto {
   @ApiPropertyOptional()
   postal_code?: string;
 }
+
+export class UpdateUserAddressDto extends PartialType(CreateUserAddressDto) {}

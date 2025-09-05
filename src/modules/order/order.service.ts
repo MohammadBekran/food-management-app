@@ -46,8 +46,7 @@ export class OrderService {
         basket;
       const { addressId, description } = paymentDto;
 
-      const address =
-        await this.userAddressService.checkExistenceById(addressId);
+      const address = await this.userAddressService.findOne(addressId);
 
       let order = queryRunner.manager.create(OrderEntity, {
         userId,

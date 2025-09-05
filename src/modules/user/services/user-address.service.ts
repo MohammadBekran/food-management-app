@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Request } from 'express';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 
 import {
   ENotFoundMessages,
@@ -10,7 +10,10 @@ import {
 } from 'src/common/enums/message.enum';
 
 import { UserAddressEntity } from '../entities/user-address.entity';
-import { CreateUserAddressDto } from '../dto/user-address.dto';
+import {
+  CreateUserAddressDto,
+  UpdateUserAddressDto,
+} from '../dto/user-address.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserAddressService {
@@ -64,17 +67,28 @@ export class UserAddressService {
     };
   }
 
-  async checkExistenceById(id: string) {
+  async update(id: string, updateUserAddressDto: UpdateUserAddressDto) {
     const { id: userId } = this.req.user!;
+    const { title, province, city, address, postal_code } =
+      updateUserAddressDto;
 
-    const address = await this.userAddressRepository.findOneBy({
-      userId,
-      id,
-    });
-    if (!address) {
-      throw new NotFoundException(ENotFoundMessages.AddressNotFound);
-    }
+    await this.findOne(id);
 
-    return address;
+    const updateUserAddressData: DeepPartial<UpdateUserAddressDto> = {};
+
+    if (title) updateUserAddressData.title = title;
+    if (province) updateUserAddressData.province = province;
+    if (city) updateUserAddressData.city = city;
+    if (address) updateUserAddressData.address = address;
+    if (postal_code) updateUserAddressData.postal_code = postal_code;
+
+    await this.userAddressRepository.update(
+      { userId, id },
+      updateUserAddressData,
+    );
+
+    return {
+      message: EPublicMessages.AddressUpdatedSuccessfully,
+    };
   }
 }
