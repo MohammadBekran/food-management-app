@@ -91,4 +91,16 @@ export class UserAddressService {
       message: EPublicMessages.AddressUpdatedSuccessfully,
     };
   }
+
+  async remove(id: string) {
+    const { id: userId } = this.req.user!;
+
+    await this.findOne(id);
+
+    await this.userAddressRepository.delete({ userId, id });
+
+    return {
+      message: EPublicMessages.AddressDeletedSuccessfully,
+    };
+  }
 }

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
@@ -40,5 +48,10 @@ export class UserAddressController {
     @Body() updateUserAddressDto: UpdateUserAddressDto,
   ) {
     return this.userAddressService.update(id, updateUserAddressDto);
+  }
+
+  @Delete(EApiEndpointNames.DELETEUserAddress)
+  remove(@Param('id') id: string) {
+    return this.userAddressService.remove(id);
   }
 }
