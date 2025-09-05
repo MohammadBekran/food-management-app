@@ -1,5 +1,6 @@
 export enum EControllerNames {
   Auth = 'auth',
+  User = 'user',
   UserAddress = 'user-address',
   Supplier = 'supplier',
   Category = 'category',
