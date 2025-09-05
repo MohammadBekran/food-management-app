@@ -13,6 +13,9 @@ export class PaymentEntity extends BaseEntity {
   @Column()
   amount: number;
 
+  @Column({ nullable: true })
+  authority: string;
+
   @Column()
   userId: string;
 
