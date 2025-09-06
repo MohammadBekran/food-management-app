@@ -1,13 +1,14 @@
-import { Controller, Get, Param, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { UserAuth } from 'src/common/decorators/auth.decorator';
-import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
+import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
+import { ESwaggerConsumes } from 'src/common/enums/swagger-consumes.enum';
 
-import { OrderService } from './order.service';
 import { CancelOrderDto } from './dto/order.dto';
+import { OrderService } from './order.service';
 
 @Controller(EControllerNames.Order)
 @ApiTags(EApiTagNames.Order)
@@ -21,5 +22,8 @@ export class OrderController {
   }
 
   @Put(EApiEndpointNames.PUTCancelOrder)
-  cancelOrder(cancelOrderDto: CancelOrderDto) {}
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
+  cancelOrder(@Param('id') id: string, @Body() cancelOrderDto: CancelOrderDto) {
+    return this.orderService.cancelOrder(id, cancelOrderDto);
+  }
 }

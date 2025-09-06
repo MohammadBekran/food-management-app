@@ -18,6 +18,7 @@ import {
 
 import {
   EBadRequestMessages,
+  EPublicMessages,
   ENotFoundMessages,
 } from 'src/common/enums/message.enum';
 
@@ -26,8 +27,9 @@ import { PaymentDto } from '../payment/dto/payment.dto';
 import { UserAddressService } from '../user/services/user-address.service';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
-import { EOrderItemStatus } from './enums/status.enum';
+import { EOrderItemStatus, EOrderStatus } from './enums/status.enum';
 import { GetUserOrdersDto } from '../user/dto/user.dto';
+import { CancelOrderDto } from './dto/order.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderService {
@@ -128,6 +130,26 @@ export class OrderService {
 
   async save(order: OrderEntity) {
     await this.orderRepository.save(order);
+  }
+
+  async cancelOrder(id: string, cancelOrderDto: CancelOrderDto) {
+    const { reason } = cancelOrderDto;
+
+    const order = await this.getUserOrder(id);
+    if (order.status === EOrderStatus.Placed) {
+      throw new BadRequestException(EBadRequestMessages.OrderCannotBeCanceled);
+    }
+
+    order.status = EOrderStatus.Canceled;
+    if (reason) {
+      order.description = reason;
+    }
+
+    await this.orderRepository.save(order);
+
+    return {
+      message: EPublicMessages.OrderCanceled,
+    }
   }
 
   async findUserOrders(getUserOrdersDto: GetUserOrdersDto) {

@@ -23,6 +23,7 @@ export enum EPublicMessages {
   SupplementaryInformationSavedSuccessfully = 'Your supplementary information has been saves successfully',
   FoodAddedToBasket = 'Food has been added to your basket successfully',
   FoodRemovedFromBasket = 'Food has been removed from your basket successfully',
+  OrderCanceled = 'Order has been canceled successfully',
 }
 
 export enum EBadRequestMessages {
@@ -36,6 +37,7 @@ export enum EBadRequestMessages {
   OutOfDiscountCapacity = 'Out of discount capacity',
   DiscountIsExpired = 'Discount is expired',
   FoodListIsEmpty = 'Your food list is empty',
+  OrderCannotBeCanceled = 'Order cannot be canceled',
 }
 
 export enum EConflictMessages {
