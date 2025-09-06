@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CategoryModule } from '../category/category.module';
+import { OrderModule } from '../order/order.module';
 import { S3Module } from '../s3/s3.module';
 import { SupplierOtpEntity } from './entities/otp.entity';
 import { SupplierContractEntity } from './entities/supplier-contract.entity';
@@ -22,6 +23,7 @@ import { SupplierService } from './supplier.service';
       SupplierContractEntity,
     ]),
     CategoryModule,
+    OrderModule,
     JwtModule,
     S3Module,
   ],

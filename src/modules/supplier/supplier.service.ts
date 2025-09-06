@@ -1,5 +1,3 @@
-import type { Request } from 'express';
-import { REQUEST } from '@nestjs/core';
 import {
   BadRequestException,
   ConflictException,
@@ -10,37 +8,41 @@ import {
   Scope,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { randomInt } from 'crypto';
+import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { randomInt } from 'crypto';
+import type { Request } from 'express';
+import { Repository } from 'typeorm';
 
+import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
+import { EFileFolderNames } from 'src/common/enums/file-folder-name.enum';
 import {
-  EConflictMessages,
   EAuthMessages,
+  EBadRequestMessages,
+  EConflictMessages,
+  EForbiddenMessages,
   ENotFoundMessages,
   EPublicMessages,
-  EBadRequestMessages,
-  EForbiddenMessages,
 } from 'src/common/enums/message.enum';
 import type { TTokenPayload } from 'src/common/types/payload.type';
 import { generateOtpData, generateTokens } from 'src/common/utils/auth.util';
-import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
 
+import { CategoryService } from '../category/category.service';
+import { OrderService } from '../order/order.service';
+import { S3Service } from '../s3/s3.service';
 import {
+  GetSupplierOrdersDto,
   SupplementaryInformationDto,
   SupplierSignupDto,
 } from './dto/supplier.dto';
-import { SupplierEntity } from './entities/supplier.entity';
-import { CategoryService } from '../category/category.service';
 import { SupplierOtpEntity } from './entities/otp.entity';
+import { SupplierContractEntity } from './entities/supplier-contract.entity';
+import { SupplierDocumentEntity } from './entities/supplier-document.entity';
+import { SupplierImageEntity } from './entities/supplier-image.entity';
+import { SupplierEntity } from './entities/supplier.entity';
 import { ESupplierStatus } from './enums/status.enum';
 import type { TUploadedDocument } from './types/uploaded-document.type';
-import { S3Service } from '../s3/s3.service';
-import { SupplierImageEntity } from './entities/supplier-image.entity';
-import { SupplierDocumentEntity } from './entities/supplier-document.entity';
-import { SupplierContractEntity } from './entities/supplier-contract.entity';
-import { EFileFolderNames } from 'src/common/enums/file-folder-name.enum';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
@@ -56,11 +58,12 @@ export class SupplierService {
     @InjectRepository(SupplierContractEntity)
     private supplierContractRepository: Repository<SupplierContractEntity>,
 
-    @Inject(REQUEST) private request: Request,
+    @Inject(REQUEST) private req: Request,
 
     private categoryService: CategoryService,
     private jwtService: JwtService,
     private s3Service: S3Service,
+    private orderService: OrderService,
   ) {}
 
   async signup(signupDto: SupplierSignupDto) {
@@ -124,12 +127,10 @@ export class SupplierService {
   async checkOtp(otpDto: CheckOtpDto) {
     const { phone, code } = otpDto;
 
-    console.log(phone);
     const supplier = await this.supplierRepository.findOne({
       where: { phone },
       relations: ['otp'],
     });
-    console.log(supplier);
     if (!supplier) {
       throw new UnauthorizedException(EAuthMessages.AccountNotFound);
     }
@@ -170,7 +171,7 @@ export class SupplierService {
   async saveSupplementaryInformation(
     supplementaryInformationDto: SupplementaryInformationDto,
   ) {
-    const { id: userId } = this.request.user!;
+    const { id: userId } = this.req.user!;
 
     const { email, national_code } = supplementaryInformationDto;
 
@@ -203,7 +204,7 @@ export class SupplierService {
   }
 
   async uploadDocuments(files: TUploadedDocument) {
-    const { id: userId } = this.request.user!;
+    const { id: userId } = this.req.user!;
     const { acceptedDocument, image } = files;
 
     const uploadedAcceptedDocument = await this.s3Service.uploadFile(
@@ -249,7 +250,7 @@ export class SupplierService {
   }
 
   async uploadContract(file: Express.Multer.File) {
-    const { id: userId } = this.request.user!;
+    const { id: userId } = this.req.user!;
     const supplier = await this.supplierRepository.findOneBy({ id: userId });
 
     if (supplier?.status === ESupplierStatus.Registered) {
@@ -286,6 +287,15 @@ export class SupplierService {
 
     return {
       message: EPublicMessages.ContractUploadedSuccessfully,
+    };
+  }
+
+  async getSupplierOrders(getSupplierOrdersDto: GetSupplierOrdersDto) {
+    const orders =
+      await this.orderService.getSupplierOrders(getSupplierOrdersDto);
+
+    return {
+      orders,
     };
   }
 

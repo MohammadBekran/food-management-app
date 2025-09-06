@@ -98,8 +98,6 @@ export class CategoryService {
   }
 
   async findBySlug(slug: string) {
-    console.log(typeof slug);
-
     const category = await this.categoryRepository.findOne({
       where: { slug },
       relations: {

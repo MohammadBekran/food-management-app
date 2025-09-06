@@ -18,18 +18,19 @@ import {
 
 import {
   EBadRequestMessages,
-  EPublicMessages,
   ENotFoundMessages,
+  EPublicMessages,
 } from 'src/common/enums/message.enum';
 
 import type { IGetBasketResponse } from '../basket/interfaces/get-basket-response.interface';
 import { PaymentDto } from '../payment/dto/payment.dto';
+import { GetSupplierOrdersDto } from '../supplier/dto/supplier.dto';
+import { GetUserOrdersDto } from '../user/dto/user.dto';
 import { UserAddressService } from '../user/services/user-address.service';
+import { CancelOrderDto } from './dto/order.dto';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
 import { EOrderItemStatus, EOrderStatus } from './enums/status.enum';
-import { GetUserOrdersDto } from '../user/dto/user.dto';
-import { CancelOrderDto } from './dto/order.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderService {
@@ -149,7 +150,7 @@ export class OrderService {
 
     return {
       message: EPublicMessages.OrderCanceled,
-    }
+    };
   }
 
   async findUserOrders(getUserOrdersDto: GetUserOrdersDto) {
@@ -181,5 +182,29 @@ export class OrderService {
     }
 
     return order;
+  }
+
+  async getSupplierOrders(getSupplierOrdersDto: GetSupplierOrdersDto) {
+    const { id: supplierId } = this.req.user!;
+    const { status, search } = getSupplierOrdersDto;
+
+    const orderQueries: FindOptionsWhere<OrderEntity> = {
+      items: { supplierId },
+    };
+
+    if (status) orderQueries.status = status;
+    if (search) orderQueries.user = Like(`%${search}%`);
+
+    const orders = await this.orderRepository.find({
+      where: orderQueries,
+      relations: {
+        items: { food: true, supplier: true, order: true },
+        address: true,
+        payments: true,
+        user: true,
+      },
+    });
+
+    return orders;
   }
 }

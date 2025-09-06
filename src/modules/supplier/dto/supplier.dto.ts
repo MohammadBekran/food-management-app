@@ -1,11 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsEnum,
   IsIdentityCard,
+  IsOptional,
   IsPhoneNumber,
   IsUUID,
   Length,
 } from 'class-validator';
+
+import { EOrderStatus } from 'src/modules/order/enums/status.enum';
 
 export class SupplierSignupDto {
   @ApiProperty()
@@ -57,4 +61,16 @@ export class UploadDocumentsDto {
 export class UploadContractDto {
   @ApiProperty({ format: 'binary' })
   contract: string;
+}
+
+export class GetSupplierOrdersDto {
+  @ApiPropertyOptional({ enum: EOrderStatus })
+  @IsOptional()
+  @IsEnum(EOrderStatus)
+  status: EOrderStatus;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(1, 50)
+  search?: string;
 }

@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,9 +20,10 @@ import {
   UploadFileFieldsS3,
   UploadFileS3,
 } from 'src/common/interceptors/upload-file.interceptor';
-
 import { ValidatedImageFile } from 'src/common/decorators/upload-file.decorator';
+
 import {
+  GetSupplierOrdersDto,
   SupplementaryInformationDto,
   SupplierSignupDto,
   UploadContractDto,
@@ -88,5 +91,11 @@ export class SupplierController {
     @ValidatedImageFile() file: Express.Multer.File,
   ) {
     return this.supplierService.uploadContract(file);
+  }
+
+  @Get(EApiEndpointNames.GETSupplierOrders)
+  @SupplierAuth()
+  getSupplierOrders(@Query() getSupplierOrdersDto: GetSupplierOrdersDto) {
+    return this.supplierService.getSupplierOrders(getSupplierOrdersDto);
   }
 }
