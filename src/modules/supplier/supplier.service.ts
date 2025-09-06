@@ -47,6 +47,8 @@ import type { TUploadedDocument } from './types/uploaded-document.type';
 @Injectable({ scope: Scope.REQUEST })
 export class SupplierService {
   constructor(
+    @Inject(REQUEST) private req: Request,
+
     @InjectRepository(SupplierEntity)
     private supplierRepository: Repository<SupplierEntity>,
     @InjectRepository(SupplierOtpEntity)
@@ -57,8 +59,6 @@ export class SupplierService {
     private supplierDocumentRepository: Repository<SupplierDocumentEntity>,
     @InjectRepository(SupplierContractEntity)
     private supplierContractRepository: Repository<SupplierContractEntity>,
-
-    @Inject(REQUEST) private req: Request,
 
     private categoryService: CategoryService,
     private jwtService: JwtService,
@@ -297,6 +297,12 @@ export class SupplierService {
     return {
       orders,
     };
+  }
+
+  async getSupplierOrder(id: string) {
+    const order = await this.orderService.getSupplierOrder(id);
+
+    return { order };
   }
 
   async sendOtpToSupplier(supplier: SupplierEntity) {

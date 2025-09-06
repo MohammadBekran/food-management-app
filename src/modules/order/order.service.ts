@@ -231,4 +231,23 @@ export class OrderService {
       pagination: paginationGenerator(count, page, limit),
     };
   }
+
+  async getSupplierOrder(id: string) {
+    const { id: supplierId } = this.req.user!;
+
+    const order = await this.orderRepository.findOne({
+      where: { items: { supplierId }, id },
+      relations: {
+        items: { food: true, supplier: true, order: true },
+        address: true,
+        payments: true,
+        user: true,
+      },
+    });
+    if (!order) {
+      throw new NotFoundException(ENotFoundMessages.OrderNotFound);
+    }
+
+    return order;
+  }
 }

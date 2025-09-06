@@ -16,6 +16,7 @@ export enum EApiEndpointNames {
   PUTSupplierUploadDocuments = 'upload-documents',
   PUTSupplierUploadContract = 'upload-contract',
   GETSupplierOrders = 'get-orders',
+  GETSupplierOrder = 'get-order/:id',
   POSTCreateCategory = '',
   GETCategories = '',
   GETCategoryBySlug = 'by-slug/:slug',

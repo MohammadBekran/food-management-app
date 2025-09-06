@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -99,5 +100,11 @@ export class SupplierController {
   @Pagination()
   getSupplierOrders(@Query() getSupplierOrdersDto: GetSupplierOrdersDto) {
     return this.supplierService.getSupplierOrders(getSupplierOrdersDto);
+  }
+
+  @Get(EApiEndpointNames.GETSupplierOrder)
+  @SupplierAuth()
+  getSupplierOrder(@Param('id') id: string) {
+    return this.supplierService.getSupplierOrder(id);
   }
 }
