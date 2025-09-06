@@ -31,6 +31,10 @@ import { CancelOrderDto } from './dto/order.dto';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
 import { EOrderItemStatus, EOrderStatus } from './enums/status.enum';
+import {
+  paginationData,
+  paginationGenerator,
+} from 'src/common/utils/pagination.util';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderService {
@@ -188,6 +192,11 @@ export class OrderService {
     const { id: supplierId } = this.req.user!;
     const { status, search } = getSupplierOrdersDto;
 
+    const { page, limit, skip } = paginationData(
+      getSupplierOrdersDto.page,
+      getSupplierOrdersDto.limit,
+    );
+
     const orderQueries: FindOptionsWhere<OrderEntity> = {
       items: { supplierId },
     };
@@ -195,7 +204,7 @@ export class OrderService {
     if (status) orderQueries.status = status;
     if (search) orderQueries.user = Like(`%${search}%`);
 
-    const orders = await this.orderRepository.find({
+    const [orders, count] = await this.orderRepository.findAndCount({
       where: orderQueries,
       relations: {
         items: { food: true, supplier: true, order: true },
@@ -203,8 +212,13 @@ export class OrderService {
         payments: true,
         user: true,
       },
+      skip,
+      take: limit,
     });
 
-    return orders;
+    return {
+      orders,
+      pagination: paginationGenerator(count, page, limit),
+    };
   }
 }

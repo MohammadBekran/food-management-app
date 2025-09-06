@@ -11,6 +11,8 @@ import {
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import { SupplierAuth } from 'src/common/decorators/auth.decorator';
+import { Pagination } from 'src/common/decorators/pagination.decorator';
+import { ValidatedImageFile } from 'src/common/decorators/upload-file.decorator';
 import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
 import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
@@ -20,7 +22,6 @@ import {
   UploadFileFieldsS3,
   UploadFileS3,
 } from 'src/common/interceptors/upload-file.interceptor';
-import { ValidatedImageFile } from 'src/common/decorators/upload-file.decorator';
 
 import {
   GetSupplierOrdersDto,
@@ -95,6 +96,7 @@ export class SupplierController {
 
   @Get(EApiEndpointNames.GETSupplierOrders)
   @SupplierAuth()
+  @Pagination()
   getSupplierOrders(@Query() getSupplierOrdersDto: GetSupplierOrdersDto) {
     return this.supplierService.getSupplierOrders(getSupplierOrdersDto);
   }

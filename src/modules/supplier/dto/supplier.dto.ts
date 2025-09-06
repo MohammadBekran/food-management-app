@@ -9,6 +9,7 @@ import {
   Length,
 } from 'class-validator';
 
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { EOrderStatus } from 'src/modules/order/enums/status.enum';
 
 export class SupplierSignupDto {
@@ -63,7 +64,7 @@ export class UploadContractDto {
   contract: string;
 }
 
-export class GetSupplierOrdersDto {
+export class GetSupplierOrdersDto extends PaginationDto {
   @ApiPropertyOptional({ enum: EOrderStatus })
   @IsOptional()
   @IsEnum(EOrderStatus)
