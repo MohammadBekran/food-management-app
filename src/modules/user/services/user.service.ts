@@ -39,4 +39,10 @@ export class UserService {
 
     return { orders };
   }
+
+  async getUserOrder(id: string) {
+    const order = await this.orderService.getUserOrder(id);
+
+    return { order };
+  }
 }

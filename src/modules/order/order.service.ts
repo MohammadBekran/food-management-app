@@ -125,4 +125,18 @@ export class OrderService {
 
     return orders;
   }
+
+  async getUserOrder(id: string) {
+    const { id: userId } = this.req.user!;
+
+    const order = await this.orderRepository.findOne({
+      where: { userId, id },
+      relations: { items: true, address: true, payments: true },
+    });
+    if (!order) {
+      throw new NotFoundException(ENotFoundMessages.OrderNotFound);
+    }
+
+    return order;
+  }
 }

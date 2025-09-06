@@ -3,6 +3,7 @@ export enum EApiEndpointNames {
   POSTUserCheckOtp = 'check-otp',
   GETUserProfile = '',
   GETUserOrders = 'my-orders',
+  GETUserOrder = 'get-order/:id',
   GETUserAddresses = '',
   GETUserAddress = ':id',
   POSTUserAddress = '',

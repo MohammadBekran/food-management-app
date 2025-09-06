@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { UserAuth } from 'src/common/decorators/auth.decorator';
@@ -23,5 +23,10 @@ export class UserController {
   @Get(EApiEndpointNames.GETUserOrders)
   getUserOrders(@Query() getUserOrdersDto: GetUserOrdersDto) {
     return this.userService.getUserOrders(getUserOrdersDto);
+  }
+
+  @Get(EApiEndpointNames.GETUserOrder)
+  getUserOrder(@Param('id') id: string) {
+    return this.userService.getUserOrder(id);
   }
 }
