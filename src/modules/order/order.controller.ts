@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { UserAuth } from 'src/common/decorators/auth.decorator';
@@ -7,6 +7,7 @@ import { EApiEndpointNames } from 'src/common/enums/api-endpoint.enum';
 import { EControllerNames } from 'src/common/enums/controller-name.enum';
 
 import { OrderService } from './order.service';
+import { CancelOrderDto } from './dto/order.dto';
 
 @Controller(EControllerNames.Order)
 @ApiTags(EApiTagNames.Order)
@@ -18,4 +19,7 @@ export class OrderController {
   getOrder(@Param('id') id: string) {
     return this.orderService.getOne(id);
   }
+
+  @Put(EApiEndpointNames.PUTCancelOrder)
+  cancelOrder(cancelOrderDto: CancelOrderDto) {}
 }

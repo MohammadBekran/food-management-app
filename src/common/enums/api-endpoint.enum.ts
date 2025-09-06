@@ -42,4 +42,5 @@ export enum EApiEndpointNames {
   POSTPayment = '',
   GETVerifyPayment = 'verify',
   GETOrder = ':id',
+  PUTCancelOrder = ':id/cancel',
 }

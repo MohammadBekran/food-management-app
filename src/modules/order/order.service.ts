@@ -97,7 +97,8 @@ export class OrderService {
   }
 
   async findOne(id: string) {
-    const order = await this.orderRepository.findOneBy({ id });
+    const { id: userId } = this.req.user!;
+    const order = await this.orderRepository.findOneBy({ userId, id });
     if (!order) {
       throw new NotFoundException(ENotFoundMessages.OrderNotFound);
     }
