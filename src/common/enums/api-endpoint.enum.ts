@@ -41,4 +41,5 @@ export enum EApiEndpointNames {
   GETBasket = '',
   POSTPayment = '',
   GETVerifyPayment = 'verify',
+  GETOrder = ':id',
 }

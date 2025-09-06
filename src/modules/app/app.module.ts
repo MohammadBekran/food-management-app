@@ -7,6 +7,7 @@ import { DatabaseModule } from '../database/database.module';
 import { DiscountModule } from '../discount/discount.module';
 import { HttpApiModule } from '../http/http.module';
 import { MenuModule } from '../menu/menu.module';
+import { OrderModule } from '../order/order.module';
 import { PaymentModule } from '../payment/payment.module';
 import { SupplierModule } from '../supplier/supplier.module';
 import { UserModule } from '../user/user.module';
@@ -22,6 +23,7 @@ import { UserModule } from '../user/user.module';
     DiscountModule,
     BasketModule,
     PaymentModule,
+    OrderModule,
   ],
 })
 export class AppModule {}

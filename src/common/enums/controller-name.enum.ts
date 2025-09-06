@@ -9,4 +9,5 @@ export enum EControllerNames {
   Basket = 'basket',
   Discount = 'discount',
   Payment = 'payment',
+  Order = 'order',
 }

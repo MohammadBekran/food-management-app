@@ -105,6 +105,26 @@ export class OrderService {
     return order;
   }
 
+  async getOne(id: string) {
+    const { id: userId } = this.req.user!;
+
+    const order = await this.orderRepository.findOne({
+      where: { userId, id },
+      relations: {
+        items: {
+          food: true,
+        },
+        address: true,
+        payments: true,
+      },
+    });
+    if (!order) {
+      throw new NotFoundException(ENotFoundMessages.OrderNotFound);
+    }
+
+    return order;
+  }
+
   async save(order: OrderEntity) {
     await this.orderRepository.save(order);
   }

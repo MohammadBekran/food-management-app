@@ -9,4 +9,5 @@ export enum EApiTagNames {
   Basket = 'Basket',
   Discount = 'Discount',
   Payment = 'Payment',
+  Order = 'Order',
 }
