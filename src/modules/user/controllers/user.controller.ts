@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 import { UserAuth } from 'src/common/decorators/auth.decorator';
 import { EApiTagNames } from 'src/common/enums/api-tag-name.enum';
@@ -21,7 +21,6 @@ export class UserController {
   }
 
   @Get(EApiEndpointNames.GETUserOrders)
-  @ApiQuery({ type: GetUserOrdersDto })
   getUserOrders(@Query() getUserOrdersDto: GetUserOrdersDto) {
     return this.userService.getUserOrders(getUserOrdersDto);
   }
