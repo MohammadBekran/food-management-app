@@ -15,3 +15,10 @@ export class GetUserOrdersDto extends PaginationDto {
   @Length(1, 50)
   search?: string;
 }
+
+export class UpdateProfileDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(1, 50)
+  name?: string;
+}
