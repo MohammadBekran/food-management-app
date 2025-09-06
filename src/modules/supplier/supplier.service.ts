@@ -13,7 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomInt } from 'crypto';
 import type { Request } from 'express';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 
 import { CheckOtpDto, SendOtpDto } from 'src/common/dto/otp.dto';
 import { EFileFolderNames } from 'src/common/enums/file-folder-name.enum';
@@ -36,6 +36,7 @@ import {
   SupplementaryInformationDto,
   SupplierSignupDto,
   UpdateOrderStatusDto,
+  UpdateProfileDto,
 } from './dto/supplier.dto';
 import { SupplierOtpEntity } from './entities/otp.entity';
 import { SupplierContractEntity } from './entities/supplier-contract.entity';
@@ -328,6 +329,31 @@ export class SupplierService {
 
     return {
       supplier,
+    };
+  }
+
+  async updateProfile(updateProfileDto: UpdateProfileDto) {
+    const { id: supplierId } = this.req.user!;
+    const { first_name, last_name, phone, email, city, store_name } =
+      updateProfileDto;
+
+    const updateUserData: DeepPartial<UpdateProfileDto> = {};
+
+    if (first_name) updateUserData.first_name = first_name;
+    if (last_name) updateUserData.last_name = last_name;
+    if (phone) updateUserData.phone = phone;
+    if (email) updateUserData.email = email;
+    if (city) updateUserData.city = city;
+    if (store_name) updateUserData.store_name = store_name;
+
+    if (!first_name && !last_name && !phone && !email && !city && !store_name) {
+      throw new BadRequestException(EBadRequestMessages.NoDataToUpdateProfile);
+    }
+
+    await this.supplierRepository.update({ id: supplierId }, updateUserData);
+
+    return {
+      message: EPublicMessages.ProfileUpdatedSuccessfully,
     };
   }
 

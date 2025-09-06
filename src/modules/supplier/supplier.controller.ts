@@ -29,6 +29,7 @@ import {
   SupplementaryInformationDto,
   SupplierSignupDto,
   UpdateOrderStatusDto,
+  UpdateProfileDto,
   UploadContractDto,
   UploadDocumentsDto,
 } from './dto/supplier.dto';
@@ -115,6 +116,13 @@ export class SupplierController {
   @SupplierAuth()
   getSupplierProfile() {
     return this.supplierService.getProfile();
+  }
+
+  @Put(EApiEndpointNames.PUTSupplierUpdateProfile)
+  @SupplierAuth()
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
+  updateProfile(@Body() updateProfileDto: UpdateProfileDto) {
+    return this.supplierService.updateProfile(updateProfileDto);
   }
 
   @Get(EApiEndpointNames.GETSupplierOrders)

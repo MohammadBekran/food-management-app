@@ -31,7 +31,7 @@ export class UserController {
     return this.userService.getUserOrder(id);
   }
 
-  @Put(EApiEndpointNames.PUTUpdateProfile)
+  @Put(EApiEndpointNames.PUTUserUpdateProfile)
   @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
   updateProfile(@Body() updateProfileDto: UpdateProfileDto) {
     return this.userService.updateProfile(updateProfileDto);

@@ -84,3 +84,35 @@ export class UpdateOrderStatusDto {
   @IsEnum(EOrderItemStatus)
   status: EOrderItemStatus;
 }
+
+export class UpdateProfileDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(1, 50)
+  first_name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(1, 50)
+  last_name?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsPhoneNumber('IR')
+  phone?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(1, 50)
+  city: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Length(1, 50)
+  store_name: string;
+}
