@@ -28,6 +28,7 @@ import {
   GetSupplierOrdersDto,
   SupplementaryInformationDto,
   SupplierSignupDto,
+  UpdateOrderStatusDto,
   UploadContractDto,
   UploadDocumentsDto,
 } from './dto/supplier.dto';
@@ -93,6 +94,21 @@ export class SupplierController {
     @ValidatedImageFile() file: Express.Multer.File,
   ) {
     return this.supplierService.uploadContract(file);
+  }
+
+  @Put(EApiEndpointNames.PUTUpdateOrderStatus)
+  @SupplierAuth()
+  @ApiConsumes(ESwaggerConsumes.URLEncoded, ESwaggerConsumes.JSON)
+  updateOrderStatus(
+    @Param('orderId') orderId: string,
+    @Param('itemId') itemId: string,
+    @Body() updateOrderStatusDto: UpdateOrderStatusDto,
+  ) {
+    return this.supplierService.updateOrderStatus(
+      orderId,
+      itemId,
+      updateOrderStatusDto,
+    );
   }
 
   @Get(EApiEndpointNames.GETSupplierOrders)

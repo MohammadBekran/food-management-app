@@ -24,7 +24,10 @@ import {
 
 import type { IGetBasketResponse } from '../basket/interfaces/get-basket-response.interface';
 import { PaymentDto } from '../payment/dto/payment.dto';
-import { GetSupplierOrdersDto } from '../supplier/dto/supplier.dto';
+import {
+  GetSupplierOrdersDto,
+  UpdateOrderStatusDto,
+} from '../supplier/dto/supplier.dto';
 import { GetUserOrdersDto } from '../user/dto/user.dto';
 import { UserAddressService } from '../user/services/user-address.service';
 import { CancelOrderDto } from './dto/order.dto';
@@ -46,6 +49,8 @@ export class OrderService {
 
     @InjectRepository(OrderEntity)
     private orderRepository: Repository<OrderEntity>,
+    @InjectRepository(OrderItemEntity)
+    private orderItemRepository: Repository<OrderItemEntity>,
   ) {}
 
   async create(basket: IGetBasketResponse, paymentDto: PaymentDto) {
@@ -249,5 +254,39 @@ export class OrderService {
     }
 
     return order;
+  }
+
+  async updateOrderstatus(
+    orderId: string,
+    itemId: string,
+    updateOrderStatusDto: UpdateOrderStatusDto,
+  ) {
+    const { id: supplierId } = this.req.user!;
+    const { status } = updateOrderStatusDto;
+
+    const orderItem = await this.orderItemRepository.findOne({
+      where: {
+        supplierId,
+        orderId,
+        id: itemId,
+      },
+      relations: { order: true, food: true },
+    });
+    if (!orderItem) {
+      throw new NotFoundException(ENotFoundMessages.OrderItemNotFound);
+    }
+
+    if (
+      orderItem.status === EOrderItemStatus.Sent &&
+      status !== EOrderItemStatus.Sent
+    ) {
+      throw new BadRequestException(
+        EBadRequestMessages.CannotChangeOrderItemStatusAfterSent,
+      );
+    }
+
+    orderItem.status = status;
+
+    await this.orderItemRepository.save(orderItem);
   }
 }

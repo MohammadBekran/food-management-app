@@ -35,6 +35,7 @@ import {
   GetSupplierOrdersDto,
   SupplementaryInformationDto,
   SupplierSignupDto,
+  UpdateOrderStatusDto,
 } from './dto/supplier.dto';
 import { SupplierOtpEntity } from './entities/otp.entity';
 import { SupplierContractEntity } from './entities/supplier-contract.entity';
@@ -287,6 +288,22 @@ export class SupplierService {
 
     return {
       message: EPublicMessages.ContractUploadedSuccessfully,
+    };
+  }
+
+  async updateOrderStatus(
+    orderId: string,
+    itemId: string,
+    updateOrderStatusDto: UpdateOrderStatusDto,
+  ) {
+    await this.orderService.updateOrderstatus(
+      orderId,
+      itemId,
+      updateOrderStatusDto,
+    );
+
+    return {
+      message: EPublicMessages.OrderItemStatusUpdatedSuccessfully,
     };
   }
 

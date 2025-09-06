@@ -10,7 +10,10 @@ import {
 } from 'class-validator';
 
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { EOrderStatus } from 'src/modules/order/enums/status.enum';
+import {
+  EOrderItemStatus,
+  EOrderStatus,
+} from 'src/modules/order/enums/status.enum';
 
 export class SupplierSignupDto {
   @ApiProperty()
@@ -74,4 +77,10 @@ export class GetSupplierOrdersDto extends PaginationDto {
   @IsOptional()
   @Length(1, 50)
   search?: string;
+}
+
+export class UpdateOrderStatusDto {
+  @ApiProperty({ enum: EOrderItemStatus })
+  @IsEnum(EOrderItemStatus)
+  status: EOrderItemStatus;
 }

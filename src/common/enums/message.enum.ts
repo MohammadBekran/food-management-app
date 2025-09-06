@@ -24,6 +24,7 @@ export enum EPublicMessages {
   FoodAddedToBasket = 'Food has been added to your basket successfully',
   FoodRemovedFromBasket = 'Food has been removed from your basket successfully',
   OrderCanceled = 'Order has been canceled successfully',
+  OrderItemStatusUpdatedSuccessfully = 'Order item status has been updated successfully',
 }
 
 export enum EBadRequestMessages {
@@ -38,6 +39,7 @@ export enum EBadRequestMessages {
   DiscountIsExpired = 'Discount is expired',
   FoodListIsEmpty = 'Your food list is empty',
   OrderCannotBeCanceled = 'Order cannot be canceled',
+  CannotChangeOrderItemStatusAfterSent = 'You cannot change the order item status after it has been sent',
 }
 
 export enum EConflictMessages {
@@ -59,6 +61,7 @@ export enum ENotFoundMessages {
   AddressNotFound = 'Address not found',
   PaymentNotFound = 'Payment not found',
   OrderNotFound = 'Order not found',
+  OrderItemNotFound = 'Order item not found',
 }
 
 export enum EAuthMessages {
