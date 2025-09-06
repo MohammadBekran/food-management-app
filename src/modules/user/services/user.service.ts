@@ -1,13 +1,23 @@
-import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Request } from 'express';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 
-import { ENotFoundMessages } from 'src/common/enums/message.enum';
+import {
+  EBadRequestMessages,
+  ENotFoundMessages,
+  EPublicMessages,
+} from 'src/common/enums/message.enum';
 import { OrderService } from 'src/modules/order/order.service';
 
-import { GetUserOrdersDto } from '../dto/user.dto';
+import { GetUserOrdersDto, UpdateProfileDto } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
 
 @Injectable({ scope: Scope.REQUEST })
@@ -44,5 +54,27 @@ export class UserService {
     const order = await this.orderService.getUserOrder(id);
 
     return { order };
+  }
+
+  async updateProfile(updateProfileDto: UpdateProfileDto) {
+    const { id: userId } = this.req.user!;
+    const { first_name, last_name, phone, email } = updateProfileDto;
+
+    const updateUserData: DeepPartial<UpdateProfileDto> = {};
+
+    if (first_name) updateUserData.first_name = first_name;
+    if (last_name) updateUserData.last_name = last_name;
+    if (phone) updateUserData.phone = phone;
+    if (email) updateUserData.email = email;
+
+    if (!first_name && !last_name && !phone && !email) {
+      throw new BadRequestException(EBadRequestMessages.NoDataToUpdateProfile);
+    }
+
+    await this.userRepository.update({ id: userId }, updateUserData);
+
+    return {
+      message: EPublicMessages.ProfileUpdatedSuccessfully,
+    };
   }
 }

@@ -1,4 +1,5 @@
 export enum EPublicMessages {
+  ProfileUpdatedSuccessfully = 'Profile has been updated successfully',
   AddressCreatedSuccessfully = 'Address has been created successfully',
   AddressUpdatedSuccessfully = 'Address has been updated successfully',
   AddressDeletedSuccessfully = 'Address has been deleted successfully',
@@ -29,6 +30,7 @@ export enum EPublicMessages {
 
 export enum EBadRequestMessages {
   OtpCodeNotExpired = 'Otp code not expired',
+  NoDataToUpdateProfile = 'No data to update profile',
   EnterOneOfTheAmountOrPercentFields = 'Enter one of the amount or percent fields',
   BasketNotFound = 'Basket not found',
   CannotUseThisDiscountCode = 'You cannot use this discount code',
