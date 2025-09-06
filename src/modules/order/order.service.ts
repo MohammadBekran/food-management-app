@@ -161,17 +161,27 @@ export class OrderService {
     const { id: userId } = this.req.user!;
     const { status, search } = getUserOrdersDto;
 
+    const { page, limit, skip } = paginationData(
+      getUserOrdersDto.page,
+      getUserOrdersDto.limit,
+    );
+
     const orderQueries: FindOptionsWhere<OrderEntity> = { userId };
 
     if (status) orderQueries.status = status;
     if (search) orderQueries.description = Like(`%${search}%`);
 
-    const orders = await this.orderRepository.find({
+    const [orders, count] = await this.orderRepository.findAndCount({
       where: orderQueries,
       relations: { items: true, address: true, payments: true },
+      skip,
+      take: limit,
     });
 
-    return orders;
+    return {
+      orders,
+      pagination: paginationGenerator(count, page, limit),
+    };
   }
 
   async getUserOrder(id: string) {
