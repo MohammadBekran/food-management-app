@@ -55,6 +55,7 @@ export enum EConflictMessages {
 
 export enum ENotFoundMessages {
   UserNotFound = 'User not found',
+  SupplierNotFound = 'Supplier not found',
   CategoryNotFound = 'Category not found',
   AgentNotFound = 'Agent not found',
   MenuNotFound = 'Menu not found',

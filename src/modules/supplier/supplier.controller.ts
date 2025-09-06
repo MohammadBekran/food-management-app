@@ -111,6 +111,12 @@ export class SupplierController {
     );
   }
 
+  @Get(EApiEndpointNames.GETSupplierProfile)
+  @SupplierAuth()
+  getSupplierProfile() {
+    return this.supplierService.getProfile();
+  }
+
   @Get(EApiEndpointNames.GETSupplierOrders)
   @SupplierAuth()
   @Pagination()

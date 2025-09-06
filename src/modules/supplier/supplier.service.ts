@@ -316,6 +316,21 @@ export class SupplierService {
     };
   }
 
+  async getProfile() {
+    const { id: supplierId } = this.req.user!;
+
+    const supplier = await this.supplierRepository.findOneBy({
+      id: supplierId,
+    });
+    if (!supplier) {
+      throw new NotFoundException(ENotFoundMessages.SupplierNotFound);
+    }
+
+    return {
+      supplier,
+    };
+  }
+
   async getSupplierOrder(id: string) {
     const order = await this.orderService.getSupplierOrder(id);
 
