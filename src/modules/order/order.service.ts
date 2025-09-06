@@ -8,7 +8,13 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Request } from 'express';
-import { DataSource, DeepPartial, Repository } from 'typeorm';
+import {
+  DataSource,
+  DeepPartial,
+  FindOptionsWhere,
+  Like,
+  Repository,
+} from 'typeorm';
 
 import {
   EBadRequestMessages,
@@ -21,6 +27,7 @@ import { UserAddressService } from '../user/services/user-address.service';
 import { OrderItemEntity } from './entities/order-item.entity';
 import { OrderEntity } from './entities/order.entity';
 import { EOrderItemStatus } from './enums/status.enum';
+import { GetUserOrdersDto } from '../user/dto/user.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderService {
@@ -100,5 +107,22 @@ export class OrderService {
 
   async save(order: OrderEntity) {
     await this.orderRepository.save(order);
+  }
+
+  async findUserOrders(getUserOrdersDto: GetUserOrdersDto) {
+    const { id: userId } = this.req.user!;
+    const { status, search } = getUserOrdersDto;
+
+    const orderQueries: FindOptionsWhere<OrderEntity> = { userId };
+
+    if (status) orderQueries.status = status;
+    if (search) orderQueries.description = Like(`%${search}%`);
+
+    const orders = await this.orderRepository.find({
+      where: orderQueries,
+      relations: { items: true, address: true, payments: true },
+    });
+
+    return orders;
   }
 }
