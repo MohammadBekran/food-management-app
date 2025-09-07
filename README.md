@@ -123,61 +123,108 @@ pnpm run test:e2e
 
 ### Authentication (`/api/auth`)
 
-- `POST /send-otp` - Send OTP to user
-- `POST /check-otp` - Verify user OTP
+| Method | Endpoint     | Description      | Auth Required |
+| ------ | ------------ | ---------------- | ------------- |
+| POST   | `/send-otp`  | Send OTP to user | ❌            |
+| POST   | `/check-otp` | Verify user OTP  | ❌            |
+
+### User Management (`/api/user`)
+
+| Method | Endpoint         | Description                 | Auth Required |
+| ------ | ---------------- | --------------------------- | ------------- |
+| GET    | `/`              | Get user profile            | ✅ User       |
+| PUT    | `/`              | Update user profile         | ✅ User       |
+| GET    | `/my-orders`     | Get user orders (paginated) | ✅ User       |
+| GET    | `/get-order/:id` | Get specific user order     | ✅ User       |
+
+### User Address Management (`/api/user-address`)
+
+| Method | Endpoint | Description               | Auth Required |
+| ------ | -------- | ------------------------- | ------------- |
+| GET    | `/`      | Get user addresses        | ✅ User       |
+| POST   | `/`      | Create user address       | ✅ User       |
+| GET    | `/:id`   | Get specific user address | ✅ User       |
+| PUT    | `/:id`   | Update user address       | ✅ User       |
+| DELETE | `/:id`   | Delete user address       | ✅ User       |
 
 ### Supplier Management (`/api/supplier`)
 
-- `POST /signup` - Supplier registration
-- `POST /send-otp` - Send OTP to supplier
-- `POST /check-otp` - Verify supplier OTP
-- `POST /supplementary-information` - Save additional information
-- `PUT /upload-documents` - Upload supplier documents
-- `PUT /upload-contract` - Upload contract
+| Method | Endpoint                                | Description                     | Auth Required |
+| ------ | --------------------------------------- | ------------------------------- | ------------- |
+| POST   | `/signup`                               | Supplier registration           | ❌            |
+| POST   | `/send-otp`                             | Send OTP to supplier            | ❌            |
+| POST   | `/check-otp`                            | Verify supplier OTP             | ❌            |
+| POST   | `/supplementary-information`            | Save additional information     | ✅ Supplier   |
+| PUT    | `/upload-documents`                     | Upload supplier documents       | ✅ Supplier   |
+| PUT    | `/upload-contract`                      | Upload contract                 | ✅ Supplier   |
+| GET    | `/`                                     | Get supplier profile            | ✅ Supplier   |
+| PUT    | `/`                                     | Update supplier profile         | ✅ Supplier   |
+| GET    | `/get-orders`                           | Get supplier orders (paginated) | ✅ Supplier   |
+| GET    | `/get-order/:id`                        | Get specific supplier order     | ✅ Supplier   |
+| PUT    | `/orders/:orderId/items/:itemId/status` | Update order item status        | ✅ Supplier   |
 
 ### Category Management (`/api/category`)
 
-- `POST /` - Create category
-- `GET /` - Get all categories (paginated)
-- `GET /by-slug/:slug` - Get category by slug
-- `PATCH /:id` - Update category
-- `DELETE /:id` - Delete category
+| Method | Endpoint         | Description                    | Auth Required |
+| ------ | ---------------- | ------------------------------ | ------------- |
+| POST   | `/`              | Create category                | ✅ Supplier   |
+| GET    | `/`              | Get all categories (paginated) | ❌            |
+| GET    | `/by-slug/:slug` | Get category by slug           | ❌            |
+| PATCH  | `/:id`           | Update category                | ✅ Supplier   |
+| DELETE | `/:id`           | Delete category                | ✅ Supplier   |
 
 ### Menu Management (`/api/menu`)
 
-- `POST /` - Create menu item
-- `PUT /:id` - Update menu item
-- `GET /get-menu-by-supplier-id/:supplierId` - Get menus by supplier
-- `GET /:id` - Get specific menu item
-- `DELETE /:id` - Delete menu item
+| Method | Endpoint                               | Description            | Auth Required |
+| ------ | -------------------------------------- | ---------------------- | ------------- |
+| POST   | `/`                                    | Create menu item       | ✅ Supplier   |
+| PUT    | `/:id`                                 | Update menu item       | ✅ Supplier   |
+| GET    | `/get-menu-by-supplier-id/:supplierId` | Get menus by supplier  | ❌            |
+| GET    | `/:id`                                 | Get specific menu item | ✅ Supplier   |
+| DELETE | `/:id`                                 | Delete menu item       | ✅ Supplier   |
 
 ### Menu Group Management (`/api/menu-group`)
 
-- `POST /` - Create menu group
-- `GET /` - Get menu groups
-- `GET /:id` - Get specific menu group
-- `PUT /:id` - Update menu group
-- `DELETE /:id` - Delete menu group
+| Method | Endpoint | Description             | Auth Required |
+| ------ | -------- | ----------------------- | ------------- |
+| POST   | `/`      | Create menu group       | ✅ Supplier   |
+| GET    | `/`      | Get menu groups         | ✅ Supplier   |
+| GET    | `/:id`   | Get specific menu group | ✅ Supplier   |
+| PUT    | `/:id`   | Update menu group       | ✅ Supplier   |
+| DELETE | `/:id`   | Delete menu group       | ✅ Supplier   |
+
+### Order Management (`/api/order`)
+
+| Method | Endpoint      | Description                | Auth Required |
+| ------ | ------------- | -------------------------- | ------------- |
+| GET    | `/:id`        | Get specific order details | ✅ User       |
+| PUT    | `/:id/cancel` | Cancel order               | ✅ User       |
 
 ### Shopping Cart (`/api/basket`)
 
-- `GET /` - Get basket contents
-- `POST /` - Add item to basket
-- `DELETE /` - Remove item from basket
-- `POST /add-discount` - Apply discount code
-- `DELETE /remove-discount` - Remove discount code
+| Method | Endpoint           | Description             | Auth Required |
+| ------ | ------------------ | ----------------------- | ------------- |
+| GET    | `/`                | Get basket contents     | ✅ User       |
+| POST   | `/`                | Add item to basket      | ✅ User       |
+| DELETE | `/`                | Remove item from basket | ✅ User       |
+| POST   | `/add-discount`    | Apply discount code     | ✅ User       |
+| DELETE | `/remove-discount` | Remove discount code    | ✅ User       |
 
 ### Discount Management (`/api/discount`)
 
-- `POST /` - Create discount
-- `PUT /:code` - Update discount
-- `DELETE /:code` - Delete discount
-- `GET /` - Get all discounts (paginated)
+| Method | Endpoint | Description                   | Auth Required |
+| ------ | -------- | ----------------------------- | ------------- |
+| POST   | `/`      | Create discount               | ✅ Admin      |
+| PUT    | `/:code` | Update discount               | ✅ Admin      |
+| DELETE | `/:code` | Delete discount               | ✅ Admin      |
+| GET    | `/`      | Get all discounts (paginated) | ✅ Admin      |
 
 ### Payment (`/api/payment`)
 
-- `POST /` - Initiate payment
-- `GET /verify` - Verify payment
+| Method | Endpoint  | Description             | Auth Required |
+| ------ | --------- | ----------------------- | ------------- |
+| POST   | `/`       | Initiate payment        | ✅ User       |
+| GET    | `/verify` | Verify payment callback | ❌            |
 
 ## Database Schema
 
