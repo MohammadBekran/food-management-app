@@ -1,1 +1,1 @@
-export const ALLOWED_FILE_TYPES_TO_UPLOAD = ['png', 'jpeg', 'jpg', 'webp'];
+export const ALLOWED_FILE_TYPES_TO_UPLOAD = ['png', 'jpeg', 'jpg', 'webp'] as const
