@@ -113,6 +113,24 @@ export class CategoryService {
     };
   }
 
+  async findById(id: string) {
+    const category = await this.categoryRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        children: true,
+      },
+    });
+    if (!category) {
+      throw new NotFoundException(ENotFoundMessages.CategoryNotFound);
+    }
+
+    return {
+      category,
+    };
+  }
+
   async findOneById(id: string) {
     const category = await this.categoryRepository.findOneBy({ id });
     if (!category)

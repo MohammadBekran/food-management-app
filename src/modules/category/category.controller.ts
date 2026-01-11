@@ -52,6 +52,12 @@ export class CategoryController {
     return this.categoryService.findBySlug(slug);
   }
 
+  @Get(EApiEndpointNames.GETCategoryBySlug)
+  @ApiParam({ name: 'id', type: 'string' })
+  findById(@Param('id') id: string) {
+    return this.categoryService.findById(id);
+  }
+
   @Patch(EApiEndpointNames.PATCHUpdateCategory)
   @ApiConsumes(ESwaggerConsumes.FormData)
   @UseInterceptors(UploadFileS3('image'))

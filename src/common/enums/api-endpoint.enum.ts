@@ -24,6 +24,7 @@ export enum EApiEndpointNames {
   POSTCreateCategory = '',
   GETCategories = '',
   GETCategoryBySlug = 'by-slug/:slug',
+  GETCategoryById = 'by-id/:id',
   PATCHUpdateCategory = ':id',
   DELETECategory = ':id',
   POSTCreateMenu = '',
