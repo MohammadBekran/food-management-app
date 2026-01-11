@@ -7,7 +7,7 @@ import { API_BEARER_AUTH } from 'src/common/constants/bearer-auth.constant';
 export const SwaggerConfiguration = (app: INestApplication) => {
   const config = new DocumentBuilder()
     .setTitle('Food Management App')
-    .setDescription('Backend application for a food management application')
+    .setDescription('Backend for a food management application')
     .setVersion('0.0.1')
     .addBearerAuth(SwaggerAuthConfiguration(), API_BEARER_AUTH)
     .build();
